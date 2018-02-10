@@ -1,0 +1,94 @@
+
+/**********************************彈出框******************************************/
+
+.upd_tip a{
+    color: black;
+    text-decoration:none;
+}
+
+.upd_tip{
+    border-top: 30px solid #7A7A7A;
+    border-left: solid 2px #7A7A7A;
+    border-right: solid 2px #7A7A7A;
+    border-bottom: solid 2px #7A7A7A;
+    background-color: white;
+    position:absolute;
+    top: 60%;
+    left: 40%;
+    width:400px;
+    height:300px;
+    overflow:hidden;
+    margin: -200px 0 0 -200px;
+    z-index:1;
+}
+
+
+.upd_con{
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-bottom: 40px;
+}
+
+.upd_con input{
+    font-size: 18px;
+    height: 30px;
+}
+
+.upd_updbtn{
+    padding-top: 45px;
+    padding-left: 70px;
+    letter-spacing: 40px;
+}
+
+.upd_updbtn input{
+    font-size: 18px;
+    width: 100px;
+    height: 40px;
+}
+
+
+.add_tip{
+    border-top: 30px solid #7A7A7A;
+    border-left: solid 2px #7A7A7A;
+    border-right: solid 2px #7A7A7A;
+    border-bottom: solid 2px #7A7A7A;
+    background-color: white;
+    position:absolute;
+    top: 51%;
+    left: 52.65%;
+    width:400px;
+    height:300px;
+    overflow:hidden;
+    margin: -200px 0 0 -200px;
+    z-index:1;
+}
+
+
+.add_con{
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-bottom: 20px;
+}
+
+.add_con input{
+    font-size: 16px;
+    height: 30px;
+}
+
+.add_con select{
+	font-size: 16px;
+	height: 30px;
+}
+
+.add_addbtn{
+    padding-left: 70px;
+    letter-spacing: 40px;
+}
+
+.add_addbtn input{
+    font-size: 18px;
+    width: 100px;
+    height: 40px;
+}
+
+/******************************************************************************************/
