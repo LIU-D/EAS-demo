@@ -45,12 +45,12 @@
         </div>
         <nav class="templatemo-left-nav">          
           <ul>
-            <li><a href="index.html"><i class="fa fa-home fa-fw"></i>首页</a></li>
-				<li><a href="data-visualization.html"><i class="f	a fa-bar-chart fa-fw"></i>机构管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_inst"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_staffroom" class="active"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
+            	<li><a href="index.jsp"  class="active"><i class="fa fa-home fa-fw"></i>首页</a></li>
+				<li><a href="CourseControlServlet?flag=get_inst"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
 				<li><a href="CourseControlServlet?flag=get_course"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
-				<li><a href="preferences.html"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
           </ul>  
         </nav>
@@ -61,8 +61,8 @@
           <div class="row">
             <nav class="templatemo-top-nav col-lg-12 col-md-12">
               <ul class="text-uppercase">
-                <li><a href="" class="active">学院管理</a></li>
-                <li><a href="">教研室管理</a></li>
+                <li><a href="" class="active">首页</a></li>
+                <li><a href="">XXXX</a></li>
                 <li><a href="">Overview</a></li>
                 <li><a href="login.html">Sign in form</a></li>
               </ul>  
@@ -182,23 +182,6 @@
             </div>           
           </div> <!-- Second row ends -->
           <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >手机网站模板</a></div>
-          <div class="templatemo-flex-row flex-content-row templatemo-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
-            <div class="col-1 templatemo-overflow-hidden">
-              <div class="templatemo-content-widget white-bg templatemo-overflow-hidden">
-                <i class="fa fa-times"></i>
-                <div class="templatemo-flex-row flex-content-row">
-                  <div class="col-1 col-lg-6 col-md-12">
-                    <h2 class="text-center">Modular<span class="badge">new</span></h2>
-                    <div id="pie_chart_div" class="templatemo-chart"></div> <!-- Pie chart div -->
-                  </div>
-                  <div class="col-1 col-lg-6 col-md-12">
-                    <h2 class="text-center">Interactive<span class="badge">new</span></h2>
-                    <div id="bar_chart_div" class="templatemo-chart"></div> <!-- Bar chart div -->
-                  </div>  
-                </div>                
-              </div>
-            </div>
-          </div>
           <footer class="text-right">
             <p>Copyright &copy; 2084 Company Name 
             | More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>

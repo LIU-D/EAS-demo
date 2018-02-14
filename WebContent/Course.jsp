@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>EAS-demo</title>
 
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -77,7 +77,7 @@ function add(){
 		<div class="templatemo-sidebar">
 			<header class="templatemo-site-header">
 			<div class="square"></div>
-			<h1>教务管理</h1>
+			<h1>EAS-demo</h1>
 			</header>
 			<div class="profile-photo-container">
 				<img src="images/profile-photo.jpg" alt="Profile Photo"
@@ -97,12 +97,12 @@ function add(){
 			</div>
 			<nav class="templatemo-left-nav">
 			<ul>
-				<li><a href="index.html"><i class="fa fa-home fa-fw"></i>Dashboard</a></li>
-				<li><a href="data-visualization.html"><i class="fa fa-bar-chart fa-fw"></i>Charts</a></li>
-				<li><a href="CourseControlServlet?flag=get_inst"><i class="fa fa-database fa-fw"></i>学院管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_staffroom"><i class="fa fa-map-marker fa-fw"></i>教研室管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
+				<li><a href="CourseControlServlet?flag=get_inst"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
+				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
 				<li><a href="CourseControlServlet?flag=get_course"  class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
-				<li><a href="preferences.html"><i class="fa fa-sliders fa-fw"></i>Preferences</a></li>
+				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>
 			</nav>
@@ -113,7 +113,7 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="" class="active">Admin panel</a></li>
+						<li><a href="CourseControlServlet?flag=get_course" class="active">课程管理</a></li>
 						<li><a href="">Dashboard</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>
