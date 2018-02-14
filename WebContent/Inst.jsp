@@ -15,7 +15,7 @@
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/templatemo-style.css" rel="stylesheet">
-<link rel="stylesheet" href="css/c1.css" type="text/css">
+<link rel="stylesheet" href="css/c1.css?v=1" type="text/css">
 <script type=text/javascript src="js/jquery.min.js"></script>
 <script type=text/javascript src="js/c1.js"></script>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -32,6 +32,13 @@ $(document).ready(function(){
 	$(".add_tip").hide(); //先让div隐藏
 	
 });
+
+function add(){
+	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示divr
+	$(".add_close").click(function(){
+		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
+	})
+}
 </script>
 </head>
 <body>
@@ -140,8 +147,8 @@ $(document).ready(function(){
 										<div>
 											<form action="CourseControlServlet" method="post">
 											<div class="upd_con">
-												课程代码: <input name="courseid" value="" type="text" readonly="true" /><br><br>
-												课程名称: <input  type="text" name="coursename" value=""/><br>
+												学院代码: <input name="instid" value="" type="text" readonly="true" /><br><br>
+												学院名称: <input  type="text" name="instname" value=""/><br>
 											</div>
 								
 											<div class="upd_updbtn">
@@ -196,27 +203,8 @@ $(document).ready(function(){
 	<div>
 		<form action="CourseControlServlet" method="post">
 		<div class="add_con">
-			课程代码: <input name="courseid" value="" type="text" /><br>
-			开课学院: <select name="instid">
-							<option value="0" selected>——————————</option>
-							<option value="1">数计学院</option>
-							<option value="2">文传学院</option>
-							<option value="3">资环学院</option>
-			         </select><br>
-			开课教研室: <select name="staffroomid">
-							<option value="0" selected>——————————</option>
-							<option value="5623">军事理论与训练教研室</option>
-							<option value="9462">信息素质教研室</option>
-							<option value="9999">网络教学平台</option>
-			         </select><br>
-			课程名称: <input  type="text" name="coursename" value=""/><br>
-			课程类型: <select name="coursetypeid">
-							<option value="0" selected>——————————</option>
-							<option value="1">理论课</option>
-							<option value="2">实验课</option>
-							<option value="3">实践课</option>
-							<option value="4">其他</option>
-			         </select><br>
+			学院代码: <input  type="text" name="instid" value=""//><br><br>
+			学院名称: <input  type="text" name="instname" value=""/><br>
 		</div>
 		<div class="add_addbtn">
 			<input  type="submit" value="添加"/>
