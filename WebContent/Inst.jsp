@@ -31,7 +31,23 @@ $(document).ready(function(){
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
 	
+	
+	var ss = $('.instidflag').val();
+	console.log(ss);
+	if(ss == 'IDalreadyexists')
+		alert(ss);
+	
 });
+
+
+function edit_get(i){
+	$(".upd_con input")[0].value = $(".edit_instid").eq(i - 1).text();
+	$(".upd_con input")[1].value = $(".edit_instname").eq(i - 1).text();
+	$(".upd_tip").fadeIn("fast");//淡入淡出效果 显示div
+	$(".upd_close").click(function(){
+		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
+	})
+}
 
 function add(){
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示divr
@@ -135,8 +151,8 @@ function add(){
 								<c:set var="index" value="${index+1}" /> 
 								<tr>
 									<td>${index}.</td>
-									<td class="edit_courseid">${i.instid}</td>
-									<td class="edit_coursename">${i.instname}</td>
+									<td class="edit_instid">${i.instid}</td>
+									<td class="edit_instname">${i.instname}</td>
 									<td><a onclick="edit_get(${index})" class="templatemo-edit-btn">Edit</a></td>
 									<td><a href="CourseControlServlet?flag=delete&courseid=${course.courseid}" class="templatemo-link"
 											 onclick="return confirm('确定要删除吗?')">Delete</a></td>
@@ -155,8 +171,8 @@ function add(){
 												<input  type="submit" value="保存"/>
 												<input class="upd_close"  type="button" value="取消"/>
 											</div>
-											<input type="hidden" name="courseid" value="" />
-											<input type="hidden" name="flag" value="update" />
+											<input type="hidden" name="instid" value="" />
+											<input type="hidden" name="flag" value="addinst" />
 											</form>
 										</div>
 									</div>
@@ -176,8 +192,7 @@ function add(){
 						<li class="active"><a href="#">3 <span class="sr-only">(current)</span></a></li>
 						<li><a href="#">4</a></li>
 						<li><a href="#">5</a></li>
-						<li><a href="#" aria-label="Next"> <span
-								aria-hidden="true"><i class="fa fa-play"></i></span>
+						<li><a href="#" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-play"></i></span>
 						</a></li>
 					</ul>
 				</div>
@@ -210,9 +225,14 @@ function add(){
 			<input  type="submit" value="添加"/>
 			<input class="add_close"  type="button" value="取消"/>
 		</div>
-		<input type="hidden" name="flag" value="add" />
+		<input type="hidden" name="flag" value="addinst" />
 		</form>
 	</div>
 </div>	
+
+<%request.getAttribute("instidflag");%>
+<%System.out.println(request.getAttribute("instidflag")); %>
+<input class="instidflag" type="hidden" name="instidflag" value="${instidflag}" />
+
 </body>
 </html>
