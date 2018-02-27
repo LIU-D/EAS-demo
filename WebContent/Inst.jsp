@@ -154,7 +154,7 @@ function add(){
 									<td class="edit_instid">${i.instid}</td>
 									<td class="edit_instname">${i.instname}</td>
 									<td><a onclick="edit_get(${index})" class="templatemo-edit-btn">Edit</a></td>
-									<td><a href="CourseControlServlet?flag=delete&courseid=${course.courseid}" class="templatemo-link"
+									<td><a href="CourseControlServlet?flag=delete_inst&instid=${i.instid}" class="templatemo-link"
 											 onclick="return confirm('确定要删除吗?')">Delete</a></td>
 								</tr>
 								</c:forEach>
@@ -172,7 +172,7 @@ function add(){
 												<input class="upd_close"  type="button" value="取消"/>
 											</div>
 											<input type="hidden" name="instid" value="" />
-											<input type="hidden" name="flag" value="addinst" />
+											<input type="hidden" name="flag" value="update_inst" />
 											</form>
 										</div>
 									</div>
@@ -218,14 +218,14 @@ function add(){
 	<div>
 		<form action="CourseControlServlet" method="post">
 		<div class="add_con">
-			学院代码: <input  type="text" name="instid" value=""//><br><br>
+			学院代码: <input  type="text" name="instid" value=""/><br><br>
 			学院名称: <input  type="text" name="instname" value=""/><br>
 		</div>
 		<div class="add_addbtn">
 			<input  type="submit" value="添加"/>
 			<input class="add_close"  type="button" value="取消"/>
 		</div>
-		<input type="hidden" name="flag" value="addinst" />
+		<input type="hidden" name="flag" value="add_inst" />
 		</form>
 	</div>
 </div>	

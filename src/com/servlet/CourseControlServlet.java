@@ -49,7 +49,7 @@ public class CourseControlServlet extends HttpServlet {
 		DBC DBC = new DBC();
 		String flag = request.getParameter("flag");
 		// 查看flag值
-		System.out.println("get  flag:" + flag);
+		System.out.println("get flag: " + flag);
 
 		if (flag == null) {
 			System.err.println("flag无值！");
@@ -157,8 +157,24 @@ public class CourseControlServlet extends HttpServlet {
 				}
 			} // flag == get_inst
 
+			// 删除学院
+			if (flag.equals("delete_inst")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from inst where instid= ?";
+					String[] param = { request.getParameter("instid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Inst.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_inst
+
 			// 删除课程
-			if (flag.equals("delete")) {
+			if (flag.equals("delete_course")) {
 				try {
 					DBC.getCon();
 					String sql = "delete from course where courseid= ?";
@@ -171,7 +187,7 @@ public class CourseControlServlet extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			} // flag=delete
+			} // flag=delete_course
 
 		} // flag!=null
 
@@ -197,7 +213,7 @@ public class CourseControlServlet extends HttpServlet {
 
 		else {
 			// 增加学院
-			if (flag.equals("addinst")) {
+			if (flag.equals("add_inst")) {
 				try {
 					String sql = "insert into inst(instid,instname)values(?,?)";
 					String instidflag = null;
@@ -207,15 +223,15 @@ public class CourseControlServlet extends HttpServlet {
 					Statement st_1 = (Statement) con.createStatement();
 					ResultSet rs_1 = st_1.executeQuery(sql_1);
 					while (rs_1.next()) {// 判断是否还有下一个数据
-						if(request.getParameter("instid").equals(rs_1.getString("instid")))
+						if (request.getParameter("instid").equals(rs_1.getString("instid")))
 							idflag = true;
 					}
-					if(idflag) {
+					if (idflag) {
 						DBC.closeAll();
 						request.setAttribute("IDalreadyexists", instidflag);
 						request.getRequestDispatcher("Inst.jsp").forward(request, response);
 					} else {
-						String[] param = { request.getParameter("instid"), request.getParameter("instname")};
+						String[] param = { request.getParameter("instid"), request.getParameter("instname") };
 						DBC.executeUpdate(sql, param);
 						DBC.closeAll();
 						response.sendRedirect("Inst.jsp");
@@ -226,8 +242,26 @@ public class CourseControlServlet extends HttpServlet {
 				}
 			}
 
+			// 修改学院
+			if (flag.equals("update_inst")) {
+				try {
+					DBC.getCon();
+					String sql = "update inst set instname = ? where instid = ?";
+					String[] param = { request.getParameter("instname"), request.getParameter("instid"), };
+					System.out.println(param[0]);
+					System.out.println(param[1]);
+					DBC.executeUpdate(sql, param);
+
+					DBC.closeAll();
+					response.sendRedirect("Inst.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 			// 增加课程
-			if (flag.equals("add")) {
+			if (flag.equals("add_course")) {
 				try {
 					DBC.getCon();
 					String sql = "insert into course(courseid,coursename,staffroomid,coursetypeid)values(?,?,?,?)";
@@ -243,7 +277,7 @@ public class CourseControlServlet extends HttpServlet {
 			}
 
 			// 修改课程
-			if (flag.equals("update")) {
+			if (flag.equals("update_course")) {
 				try {
 					DBC.getCon();
 					String sql = "update course set coursename = ? where courseid = ?";
