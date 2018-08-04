@@ -82,7 +82,7 @@ function edit_get(i,id){
             $.each(data.instList, function(index, item) {
             	if(item.instid == id){
             		$("#option_tip").append(
-                 	    	"<option class='slt' name='instid' value="+item.instid+">" + item.instname+ "</option>");
+                 	    	"<option class='slt' value="+item.instid+">" + item.instname+ "</option>");
             	}else{
             	$("#option_tip").append(
          	    	"<option value="+item.instid+">" + item.instname+ "</option>");
@@ -236,7 +236,7 @@ function add(){
 									<div>
 										<form action="CourseControlServlet" method="post">
 											<div class="upd_con">教研室代码: <input name="staffroomid" value="" type="text" readonly="true" /> <br>
-												<br>单位名称：<select class="" id="option_tip"></select>
+												<br>单位名称：<select name="instid" class="" id="option_tip"></select>
 												<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
 											</div>
 

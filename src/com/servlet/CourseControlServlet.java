@@ -298,12 +298,11 @@ public class CourseControlServlet extends HttpServlet {
 			if (flag.equals("update_staffroom")) {
 				try {
 					DBC.getCon();
-					String sql = "update staffroom set staffroomname = ? where staffroomid = ?";
-					String[] param = { request.getParameter("staffroomname"), request.getParameter("staffroomid")};
+					String sql = "update staffroom set staffroomname = ?,instid = ? where staffroomid = ?";
+					String[] param = { request.getParameter("staffroomname"),request.getParameter("instid"),request.getParameter("staffroomid")};
 					System.out.println(param[0]);
 					System.out.println(param[1]);
 					DBC.executeUpdate(sql, param);
-
 					DBC.closeAll();
 					response.sendRedirect("Staffroom.jsp");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
