@@ -63,10 +63,41 @@ $(document).ready(function(){
 	
 });
 
-function edit_get(i){
+function edit_get(i,id){
 	var a = $(".edit_staffroomid").eq(i - 1).text();
 	$(".upd_con input")[0].value = $(".edit_staffroomid").eq(i - 1).text();
 	$(".upd_con input")[1].value = $(".edit_staffroomname").eq(i - 1).text();
+	
+	$.ajax({
+        url: "SelectServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+			select:3,
+			date:new Date()
+        },
+        success: function (data) {
+            console.log(typeof(data));
+            $("#option_tip option").remove();
+            $.each(data.instList, function(index, item) {
+            	if(item.instid == id){
+            		$("#option_tip").append(
+                 	    	"<option class='slt' name='instid' value="+item.instid+">" + item.instname+ "</option>");
+            	}else{
+            	$("#option_tip").append(
+         	    	"<option value="+item.instid+">" + item.instname+ "</option>");
+            	}
+	        });
+            
+            $(".slt").attr("selected",true);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+
+    });
+	
+	
 	$(".upd_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".upd_close").click(function(){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -193,7 +224,7 @@ function add(){
 										<td class="edit_staffroomid">${s.staffroomid}</td>
 										<td>${s.instname}</td>
 										<td class="edit_staffroomname">${s.staffroomname}</td>
-										<td><a onclick="edit_get(${index})"
+										<td><a onclick="edit_get(${index},${s.instid})"
 											class="templatemo-edit-btn">Edit</a></td>
 										<td><a
 											href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}"
@@ -204,23 +235,9 @@ function add(){
 								<div class="upd_tip">
 									<div>
 										<form action="CourseControlServlet" method="post">
-											<div class="upd_con">
-												教研室代码: <input name="staffroomid" value="" type="text"
-													readonly="true" /> <br>
-												<br>
-												
-													<!--
-													<div class="col-lg-6 col-md-6 " style="width: 100%">
-													<label class="control-label templatemo-block">单位名称： </label>  -->
-													单位名称：
-													<!-- <select class="form-control" id="option_1"> -->
-													<select class="" id="option_tip">
-														<option value="" checked>————————</option>
-													</select>
-											
-												<br>
-												<br> 教研室名称: <input type="text" name="staffroomname"
-													value="" />
+											<div class="upd_con">教研室代码: <input name="staffroomid" value="" type="text" readonly="true" /> <br>
+												<br>单位名称：<select class="" id="option_tip"></select>
+												<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
 											</div>
 
 											<div class="upd_updbtn">
@@ -228,7 +245,7 @@ function add(){
 													type="button" value="取消" />
 											</div>
 											<input type="hidden" name="staffroomid" value="" /> <input
-												type="hidden" name="flag" value="update" />
+												type="hidden" name="flag" value="update_staffroom" />
 										</form>
 									</div>
 								</div>
