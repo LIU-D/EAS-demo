@@ -1,6 +1,7 @@
 package com.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,10 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dao.DBC;
+import com.google.gson.Gson;
 import com.mod.Course;
 import com.mod.CourseType;
 import com.mod.Inst;
 import com.mod.InstStaffroom;
+import com.mod.JsonSelect;
 import com.mod.Staffroom;
 import com.mysql.jdbc.Connection;
 
@@ -133,6 +136,50 @@ public class CourseControlServlet extends HttpServlet {
 				}
 
 			} // flag == get_staffroom
+			
+			
+			if (flag.equals("select_staffroom")) {
+				try {
+					List<InstStaffroom> List = new ArrayList<InstStaffroom>();
+					DBC.getCon();
+					String sql_1 = "select * from staffroom where instid = ?";
+					String[] param = { request.getParameter("instid") };
+					ResultSet rs_1 = DBC.executeQuery(sql_1,param);
+					while (rs_1.next()) {// 判断是否还有下一个数据
+						InstStaffroom item = new InstStaffroom();
+						Staffroom staffroom = new Staffroom();
+						item.setInstid(rs_1.getInt("instid"));
+						item.setStaffroomid(rs_1.getInt("staffroomid"));
+						item.setStaffroomname(rs_1.getString("staffroomname"));
+						List.add(item);
+					}
+					for (int i = 0; i < List.size(); i++) {
+						String sql_2 = "select * from inst";
+						Connection con = (Connection) DBC.getCon();
+						Statement st = (Statement) con.createStatement();
+						ResultSet rs_2 = st.executeQuery(sql_2);
+						while (rs_2.next()) {// 判断是否还有下一个数据
+							if (rs_2.getInt("instid") == List.get(i).getInstid()) {
+								List.get(i).setInstname(rs_2.getString("instname"));
+							}
+						}
+					}
+						
+					Gson gson = new Gson();
+					String json_list = gson.toJson(List);
+					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+				    out.print(json_list);
+				    out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} // flag == select_staffroom
 
 			if (flag.equals("get_inst")) {
 				try {

@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>EAS-demo</title>
+<title>EMS-demo</title>
 
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -77,7 +77,7 @@ function edit_get(i,id){
 			date:new Date()
         },
         success: function (data) {
-            console.log(typeof(data));
+            /*console.log(typeof(data));*/
             $("#option_tip option").remove();
             $.each(data.instList, function(index, item) {
             	if(item.instid == id){
@@ -118,7 +118,7 @@ function add(){
 		<div class="templatemo-sidebar">
 			<header class="templatemo-site-header">
 			<div class="square"></div>
-			<h1>EAS-demo</h1>
+			<h1>EMS-demo</h1>
 			</header>
 			<div class="profile-photo-container">
 				<img src="images/profile-photo.jpg" alt="Profile Photo"
@@ -213,7 +213,7 @@ function add(){
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody class="inst_content">
 								<%
 									request.getAttribute("list");
 								%>

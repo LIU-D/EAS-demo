@@ -82,7 +82,7 @@ function add(){
 		<div class="templatemo-sidebar">
 			<header class="templatemo-site-header">
 			<div class="square"></div>
-			<h1>EAS-demo</h1>
+			<h1>EMS-demo</h1>
 			</header>
 			<div class="profile-photo-container">
 				<img src="images/profile-photo.jpg" alt="Profile Photo"

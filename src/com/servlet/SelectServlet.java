@@ -70,7 +70,6 @@ public class SelectServlet extends HttpServlet {
 				String json_list = gson.toJson(instList);
 				response.setHeader("Cache-Control", "no-cache");//去除缓存
 				response.setContentType("application/json;charset=utf-8");
-				System.out.println("jsonlist: " + json_list);
 				PrintWriter out = response.getWriter();
 			    out.print(json_list);
 			    out.flush();
@@ -123,7 +122,6 @@ public class SelectServlet extends HttpServlet {
 				
 				Gson gson = new Gson();
 				String json_list = gson.toJson(jsonSelect);
-				System.out.println("jsonlist" + json_list);
 				response.setHeader("Cache-Control", "no-cache");//去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
@@ -144,7 +142,6 @@ public class SelectServlet extends HttpServlet {
 				DBC.getCon();
 				String sql_2 = "select * from staffroom where instid = ?";
 				String[] param = { request.getParameter("instid") };
-				System.out.println(request.getParameter("instid"));
 				ResultSet rs_2 = DBC.executeQuery(sql_2, param);
 				while (rs_2.next()) {// 判断是否还有下一个数据
 					Staffroom staffroom = new Staffroom();
