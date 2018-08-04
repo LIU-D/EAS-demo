@@ -36,11 +36,11 @@ $(document).ready(function(){
         type: "POST",
         dataType:"JSON",
         data: {
-			select:0
+			select:3
         },
         success: function (data) {
             console.log(typeof(data));
-            $.each(data, function(index, item) {
+            $.each(data.instList, function(index, item) {
 	            $("#option_search").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
 	        });

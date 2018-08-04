@@ -124,9 +124,12 @@ public class SelectServlet extends HttpServlet {
 				Gson gson = new Gson();
 				String json_list = gson.toJson(jsonSelect);
 				System.out.println("jsonlist" + json_list);
-				response.setCharacterEncoding("UTF-8");
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
 			    out.print(json_list);
+			    out.flush();
+				out.close();
 				DBC.closeAll();
 				
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
