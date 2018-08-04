@@ -53,6 +53,37 @@ public class SelectServlet extends HttpServlet {
 		String select = request.getParameter("select");
 		System.out.println("select=" + select);
 		
+		if(select.equals("0")) {
+			List<Inst> instList = new ArrayList<Inst>();
+			try {
+				Connection con = (Connection) DBC.getCon();
+				String sql_1 = "select * from inst";
+				Statement st_1 = (Statement) con.createStatement();
+				ResultSet rs_1 = st_1.executeQuery(sql_1);
+				while (rs_1.next()) {// 判断是否还有下一个数据
+					Inst inst = new Inst();
+					inst.setInstid(rs_1.getInt("instid"));
+					inst.setInstname(rs_1.getString("instname"));
+					instList.add(inst);
+				}
+				Gson gson = new Gson();
+				String json_list = gson.toJson(instList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				System.out.println("jsonlist: " + json_list);
+				PrintWriter out = response.getWriter();
+			    out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+				
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
 		if(select.equals("3")) {
 			List<Inst> instList = new ArrayList<Inst>();
 			List<Staffroom> staffroomList = new ArrayList<Staffroom>();
@@ -92,7 +123,7 @@ public class SelectServlet extends HttpServlet {
 				
 				Gson gson = new Gson();
 				String json_list = gson.toJson(jsonSelect);
-				System.out.println(json_list);
+				System.out.println("jsonlist" + json_list);
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
 			    out.print(json_list);

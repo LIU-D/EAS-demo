@@ -35,7 +35,7 @@ public class DBC {
     	   String DRIVER = "com.mysql.jdbc.Driver";
      
     	   String URL = "jdbc:mysql://localhost:3306/" + dbname + "?user=" + user + "&password=" + pwd
-               + "&useUnicode=true&characterEncoding=utf8";
+               + "&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT";
     	   Class.forName(DRIVER).newInstance();
     	   conn = DriverManager.getConnection(URL);  
     	   System.out.println("数据库连接成功\n");

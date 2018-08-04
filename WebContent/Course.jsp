@@ -30,14 +30,19 @@ $(document).ready(function(){
 	/**********************************************************************************************/
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
-	
-	$.post("SelectServlet",{ "select":3,"D":new Date() },function(data){
-		alert(1);
-	$("#option_1").append("<option>123456789</option>");
-	},"json");
-	
-});
 
+	$.ajax({
+	    type : "post",
+	    url : "SelectServlet", //此次url改为真正需要的url
+	    success : function(data, status) {
+	        $.each(data, function(index, item) {
+	            $("#option_1").append(  //此处向select中循环绑定数据
+	    "<option value="+item.instList.instid+">" + item.instList.instname+ "</option>");
+	        });
+	    },
+	});
+});
+/*
 function change_1(v){
 	var instid = v;
 	alert(instid);
@@ -48,7 +53,7 @@ function change_1(v){
 		})
 	},"json");
 }
-
+*/
 
 
 
@@ -133,21 +138,21 @@ function add(){
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
 							<label class="control-label templatemo-block">开课学院</label> 
 							<select class="form-control" id="option_1" >
-								<option value="" checked>————————</option>
+								<option value="" checked>——————————————</option>
 							</select>
 						</div>
 
 						<div class="col-lg-6 col-md-6 " style="width: 25%">
 							<label class="control-label templatemo-block">开课教研室</label> 
 							<select class="form-control"  id="option_2">
-							<option value="" checked>————————</option>
+							<option value="" checked>——————————————————</option>
 							</select>
 						</div>
 
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
 							<label class="control-label templatemo-block">课程类型</label> 
 							<select class="form-control" id="option_3">
-								<option value="" checked>————————</option>
+								<option value="" checked>——————————————</option>
 							</select>
 						</div>
 

@@ -294,6 +294,24 @@ public class CourseControlServlet extends HttpServlet {
 				}
 			}
 
+			// 修改教研室
+			if (flag.equals("update_staffroom")) {
+				try {
+					DBC.getCon();
+					String sql = "update course set staffroomname = ? where staffroomid = ?";
+					String[] param = { request.getParameter("staffroomname"), request.getParameter("staffroomid"), };
+					System.out.println(param[0]);
+					System.out.println(param[1]);
+					DBC.executeUpdate(sql, param);
+
+					DBC.closeAll();
+					response.sendRedirect("Staffroom.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 			// 按课程代码查询课程
 			if (flag.equals("query")) {
 				try {
