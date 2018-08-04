@@ -39,7 +39,6 @@ $(document).ready(function(){
 			select:3
         },
         success: function (data) {
-            console.log(typeof(data));
             $.each(data.instList, function(index, item) {
 	            $("#option_search").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
@@ -58,10 +57,57 @@ $(document).ready(function(){
 
     });
 	
+	$.ajax({
+        url: "CourseControlServlet",
+        type: "GET",
+        dataType:"JSON",
+        data: {
+        	flag:"get_staffroom"
+        },
+        success: function (data) {
+        	 var str = '确定要删除吗？';
+             $.each(data, function(index, item) {
+             	$("#option_tip").append('<tr><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td></tr>');
+             	$("#option_tip").append('<tr><td>'+index+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get(${index},${s.instid})" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+ 	        });
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             alert(errorThrown);
+         }
+
+    });
+	
 	
 	
 	
 });
+
+function showInst(val){
+	
+	$.ajax({
+        url: "CourseControlServlet",
+        type: "GET",
+        dataType:"JSON",
+        data: {
+			flag:"select_staffroom",
+			instid:val,
+			date:new Date()
+        },
+        success: function (data) {
+            $(".inst_content tr").remove();
+            var str = '确定要删除吗？';
+            $.each(data, function(index, item) {
+            	//$(".inst_content tr").remove();
+            	$("#option_tip").append('<tr><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td></tr>');
+            	$("#option_tip").append('<tr><td>'+index+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get(${index},${s.instid})" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+	        });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+
+    });
+}
 
 function edit_get(i,id){
 	var a = $(".edit_staffroomid").eq(i - 1).text();
@@ -177,7 +223,7 @@ function add(){
 					<div class="row ">
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
 							<label class="control-label templatemo-block">开课学院</label> 
-							<select class="form-control" id="option_search">
+							<select onchange="showInst(this.value)" class="form-control" id="option_search">
 								<option value="" checked>——————————————</option>
 							</select>
 						</div>
@@ -214,23 +260,7 @@ function add(){
 								</tr>
 							</thead>
 							<tbody class="inst_content">
-								<%
-									request.getAttribute("list");
-								%>
-								<c:forEach var="s" items="${list}">
-									<c:set var="index" value="${index+1}" />
-									<tr>
-										<td>${index}.</td>
-										<td class="edit_staffroomid">${s.staffroomid}</td>
-										<td>${s.instname}</td>
-										<td class="edit_staffroomname">${s.staffroomname}</td>
-										<td><a onclick="edit_get(${index},${s.instid})"
-											class="templatemo-edit-btn">Edit</a></td>
-										<td><a
-											href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}"
-											class="templatemo-link" onclick="return confirm('确定要删除吗?')">Delete</a></td>
-									</tr>
-								</c:forEach>
+								
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
