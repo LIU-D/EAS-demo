@@ -150,11 +150,13 @@ public class SelectServlet extends HttpServlet {
 					staffroomList.add(staffroom);
 				}
 				Gson gson = new Gson();
-				String staffroom_list = gson.toJson(staffroomList);
-				response.setCharacterEncoding("UTF-8");
+				String json_list = gson.toJson(staffroomList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
-				System.out.println(staffroom_list);
-			    out.print(staffroom_list);
+				out.print(json_list);
+			    out.flush();
+				out.close();
 				DBC.closeAll();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block

@@ -30,32 +30,83 @@ $(document).ready(function(){
 	/**********************************************************************************************/
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
-
+	
+	
 	$.ajax({
-	    type : "post",
-	    url : "SelectServlet", //此次url改为真正需要的url
-	    success : function(data, status) {
-	        $.each(data, function(index, item) {
-	            $("#option_1").append(  //此处向select中循环绑定数据
-	    "<option value="+item.instList.instid+">" + item.instList.instname+ "</option>");
+        url: "SelectServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+			select:3
+        },
+        success: function (data) {
+            $.each(data.instList, function(index, item) {
+	            $("#option_1").append(  
+	    			"<option value="+item.instid+">" + item.instname+ "</option>");
 	        });
-	    },
-	});
+            $.each(data.staffroomList, function(index, item) {
+	            $("#option_2").append(  
+	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	        });
+            $.each(data.typeList, function(index, item) {
+	            $("#option_3").append(  
+	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
+	        });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+
+    });
+	
 });
-/*
-function change_1(v){
-	var instid = v;
-	alert(instid);
-	$.post("SelectServlet",{"select":1,"instid":instid},function(data){
-		$(".opstaffroom").remove();
-		$.each(data,function(i,c){
-			$('#option_2').append('<option class="opstaffroom" value=' + c.staffroomid + '>' + c.staffroomname + '</option>');
-		})
-	},"json");
+
+
+function changeStaffroom(val){
+	if(val == 'all'){
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:3
+	        },
+	        success: function (data) {
+	        	$("#option_2 option").remove();
+	        	 $("#option_2").append(  
+			    			"<option select='select' value='all'>全部</option>");
+	            $.each(data.staffroomList, function(index, item) {
+		            $("#option_2").append(  
+		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }
+
+	    });
+	}else{
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:1,
+				instid:val
+	        },
+	        success: function (data) {
+	        	$("#option_2 option").remove();
+	            $.each(data, function(index, item) {
+		            $("#option_2").append(  
+		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	}//else
 }
-*/
-
-
 
 function edit_get(i){
 	var a = $(".edit_courseid").eq(i - 1).text();
@@ -103,12 +154,15 @@ function add(){
 			<nav class="templatemo-left-nav">
 			<ul>
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
-				<li><a href="CourseControlServlet?flag=get_inst"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
+				<li><a href="CourseControlServlet?flag=get_inst"><i
+						class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_course"  class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="CourseControlServlet?flag=get_course"
+					class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
-				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
+				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign
+						Out</a></li>
 			</ul>
 			</nav>
 		</div>
@@ -118,7 +172,8 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="CourseControlServlet?flag=get_course" class="active">课程管理</a></li>
+						<li><a href="CourseControlServlet?flag=get_course"
+							class="active">课程管理</a></li>
 						<li><a href="">Dashboard</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>
@@ -136,31 +191,32 @@ function add(){
 					style="padding: 15px">
 					<div class="row ">
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
-							<label class="control-label templatemo-block">开课学院</label> 
-							<select class="form-control" id="option_1" >
-								<option value="" checked>——————————————</option>
+							<label class="control-label templatemo-block">开课学院</label> <select
+								onchange="changeStaffroom(this.value)" class="form-control"
+								id="option_1">
+								<option value="all" checked>全部</option>
 							</select>
 						</div>
 
 						<div class="col-lg-6 col-md-6 " style="width: 25%">
-							<label class="control-label templatemo-block">开课教研室</label> 
-							<select class="form-control"  id="option_2">
-							<option value="" checked>——————————————————</option>
+							<label class="control-label templatemo-block">开课教研室</label> <select
+								class="form-control" id="option_2">
+								<option value="all" checked>全部</option>
 							</select>
 						</div>
 
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
-							<label class="control-label templatemo-block">课程类型</label> 
-							<select class="form-control" id="option_3">
-								<option value="" checked>——————————————</option>
+							<label class="control-label templatemo-block">课程类型</label> <select
+								class="form-control" id="option_3">
+								<option value="all" checked>全部</option>
 							</select>
 						</div>
 
 						<div class="col-lg-6 col-md-6 "
 							style="width: 35%; padding-top: 16px">
 							<button type="submit" class="templatemo-blue-button">Update</button>
-							<button type="reset" class="templatemo-white-button" onclick="add()"
-								style="margin-left: 10px">Add</button>
+							<button type="reset" class="templatemo-white-button"
+								onclick="add()" style="margin-left: 10px">Add</button>
 							<button type="reset" class="templatemo-white-button"
 								style="margin-left: 10px">Import</button>
 						</div>
@@ -192,42 +248,47 @@ function add(){
 								</tr>
 							</thead>
 							<tbody>
-								<%request.getAttribute("C_list");%>
+								<%
+									request.getAttribute("C_list");
+								%>
 								<c:forEach var="course" items="${C_list}">
-								<c:set var="index" value="${index+1}" /> 
-								<tr>
-									<td>${index}.</td>
-									<td class="edit_courseid">${course.courseid}</td>
-									<td class="edit_coursename">${course.coursename}</td>
-									<td>${course.instname}</td>
-									<td>${course.staffroomname}</td>
-									<td>${course.coursetype}</td>
-									<td><a onclick="edit_get(${index})" class="templatemo-edit-btn">Edit</a></td>
-									<td><a href="CourseControlServlet?flag=delete_course&courseid=${course.courseid}" class="templatemo-link"
-											 onclick="return confirm('确定要删除吗?')">Delete</a></td>
-								</tr>
+									<c:set var="index" value="${index+1}" />
+									<tr>
+										<td>${index}.</td>
+										<td class="edit_courseid">${course.courseid}</td>
+										<td class="edit_coursename">${course.coursename}</td>
+										<td>${course.instname}</td>
+										<td>${course.staffroomname}</td>
+										<td>${course.coursetype}</td>
+										<td><a onclick="edit_get(${index})"
+											class="templatemo-edit-btn">Edit</a></td>
+										<td><a
+											href="CourseControlServlet?flag=delete_course&courseid=${course.courseid}"
+											class="templatemo-link" onclick="return confirm('确定要删除吗?')">Delete</a></td>
+									</tr>
 								</c:forEach>
-					<!------------------------------------------------------------------------------------------------------------------------------>
-									<div class="upd_tip">
-										<div>
-											<form action="CourseControlServlet" method="post">
+								<!------------------------------------------------------------------------------------------------------------------------------>
+								<div class="upd_tip">
+									<div>
+										<form action="CourseControlServlet" method="post">
 											<div class="upd_con">
-												课程代码: <input name="courseid" value="" type="text" readonly="true" /><br><br>
-												课程名称: <input  type="text" name="coursename" value=""/><br>
+												课程代码: <input name="courseid" value="" type="text"
+													readonly="true" /><br> <br> 课程名称: <input
+													type="text" name="coursename" value="" /><br>
 											</div>
-								
+
 											<div class="upd_updbtn">
-												<input  type="submit" value="保存"/>
-												<input class="upd_close"  type="button" value="取消"/>
+												<input type="submit" value="保存" /> <input class="upd_close"
+													type="button" value="取消" />
 											</div>
-											<input type="hidden" name="courseid" value="" />
-											<input type="hidden" name="flag" value="update_course" />
-											</form>
-										</div>
+											<input type="hidden" name="courseid" value="" /> <input
+												type="hidden" name="flag" value="update_course" />
+										</form>
 									</div>
-									
-					<!------------------------------------------------------------------------------------------------------------------------------>
-								
+								</div>
+
+								<!------------------------------------------------------------------------------------------------------------------------------>
+
 							</tbody>
 						</table>
 					</div>
@@ -264,39 +325,37 @@ function add(){
 
 
 
-<div class="add_tip">
-	<div>
-		<form action="CourseControlServlet" method="post">
-		<div class="add_con">
-			课程代码: <input name="courseid" value="" type="text" /><br>
-			开课学院: <select name="instid">
-							<option value="0" selected>——————————</option>
-							<option value="1">数计学院</option>
-							<option value="2">文传学院</option>
-							<option value="3">资环学院</option>
-			         </select><br>
-			开课教研室: <select name="staffroomid">
-							<option value="0" selected>——————————</option>
-							<option value="5623">军事理论与训练教研室</option>
-							<option value="9462">信息素质教研室</option>
-							<option value="9999">网络教学平台</option>
-			         </select><br>
-			课程名称: <input  type="text" name="coursename" value=""/><br>
-			课程类型: <select name="coursetypeid">
-							<option value="0" selected>——————————</option>
-							<option value="1">理论课</option>
-							<option value="2">实验课</option>
-							<option value="3">实践课</option>
-							<option value="4">其他</option>
-			         </select><br>
+	<div class="add_tip">
+		<div>
+			<form action="CourseControlServlet" method="post">
+				<div class="add_con">
+					课程代码: <input name="courseid" value="" type="text" /><br>
+					开课学院: <select name="instid">
+						<option value="0" selected>——————————</option>
+						<option value="1">数计学院</option>
+						<option value="2">文传学院</option>
+						<option value="3">资环学院</option>
+					</select><br> 开课教研室: <select name="staffroomid">
+						<option value="0" selected>——————————</option>
+						<option value="5623">军事理论与训练教研室</option>
+						<option value="9462">信息素质教研室</option>
+						<option value="9999">网络教学平台</option>
+					</select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
+					课程类型: <select name="coursetypeid">
+						<option value="0" selected>——————————</option>
+						<option value="1">理论课</option>
+						<option value="2">实验课</option>
+						<option value="3">实践课</option>
+						<option value="4">其他</option>
+					</select><br>
+				</div>
+				<div class="add_addbtn">
+					<input type="submit" value="添加" /> <input class="add_close"
+						type="button" value="取消" />
+				</div>
+				<input type="hidden" name="flag" value="add_course" />
+			</form>
 		</div>
-		<div class="add_addbtn">
-			<input  type="submit" value="添加"/>
-			<input class="add_close"  type="button" value="取消"/>
-		</div>
-		<input type="hidden" name="flag" value="add_course" />
-		</form>
 	</div>
-</div>	
 </body>
 </html>
