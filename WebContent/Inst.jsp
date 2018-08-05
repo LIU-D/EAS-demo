@@ -100,7 +100,7 @@ function add(){
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
 						<li><a href="CourseControlServlet?flag=get_inst" class="active">学院管理</a></li>
-						<li><a href="CourseControlServlet?flag=get_staffroom">教研室管理</a></li>
+						<li><a href="Staffroom.jsp">教研室管理</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>
 					</ul>

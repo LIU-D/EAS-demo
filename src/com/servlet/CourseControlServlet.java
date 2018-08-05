@@ -225,6 +225,22 @@ public class CourseControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // flag=delete_inst
+			
+			// 删除教研室
+						if (flag.equals("delete_staffroom")) {
+							try {
+								DBC.getCon();
+								String sql = "delete from staffroom where staffroomid= ?";
+								String[] param = { request.getParameter("staffroomid"), };
+								DBC.executeUpdate(sql, param);
+								DBC.closeAll();
+								response.sendRedirect("Staffroom.jsp");
+
+							} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} // flag=delete_staffroom
 
 			// 删除课程
 			if (flag.equals("delete_course")) {

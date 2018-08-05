@@ -30,7 +30,7 @@ $(document).ready(function(){
 	/**********************************************************************************************/
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
-
+	
 	$.ajax({
         url: "SelectServlet",
         type: "POST",
@@ -65,10 +65,10 @@ $(document).ready(function(){
         	flag:"get_staffroom"
         },
         success: function (data) {
-        	 var str = '确定要删除吗？';
+        	$(".inst_content tr").remove();
+        	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$("#option_tip").append('<tr><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td></tr>');
-             	$("#option_tip").append('<tr><td>'+index+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get(${index},${s.instid})" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".inst_content").append('<tr><td>'+(++index)+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_staffroom&staffroomid='+item.staffroomid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -84,23 +84,24 @@ $(document).ready(function(){
 
 function showInst(val){
 	
+	var fg = "select_staffroom";
+	if(val == 'all')
+		fg= "get_staffroom";
 	$.ajax({
         url: "CourseControlServlet",
         type: "GET",
         dataType:"JSON",
         data: {
-			flag:"select_staffroom",
+			flag:fg,
 			instid:val,
 			date:new Date()
         },
         success: function (data) {
             $(".inst_content tr").remove();
-            var str = '确定要删除吗？';
+            var str = "'确定要删除吗？'";
             $.each(data, function(index, item) {
-            	//$(".inst_content tr").remove();
-            	$("#option_tip").append('<tr><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td><td>1230</td></tr>');
-            	$("#option_tip").append('<tr><td>'+index+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get(${index},${s.instid})" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete&staffroomid=${Staffroom.staffroomid}" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
-	        });
+            	$(".inst_content").append('<tr><td>'+(++index)+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_staffroom&staffroomid='+item.staffroomid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
@@ -204,8 +205,7 @@ function add(){
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
 						<li><a href="CourseControlServlet?flag=get_inst">学院管理</a></li>
-						<li><a href="CourseControlServlet?flag=get_staffroom"
-							class="active">教研室管理</a></li>
+						<li><a href="Staffroom.jsp"	class="active">教研室管理</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>
 					</ul>
@@ -224,7 +224,7 @@ function add(){
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
 							<label class="control-label templatemo-block">开课学院</label> 
 							<select onchange="showInst(this.value)" class="form-control" id="option_search">
-								<option value="" checked>——————————————</option>
+								<option value="all" checked>全部</option>
 							</select>
 						</div>
 						<div class="col-lg-6 col-md-6 "
@@ -260,7 +260,7 @@ function add(){
 								</tr>
 							</thead>
 							<tbody class="inst_content">
-								
+								<tr><td  colspan="6" align="center">没有信息！</td></tr>
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
