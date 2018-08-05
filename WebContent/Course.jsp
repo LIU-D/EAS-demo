@@ -80,14 +80,11 @@ $(document).ready(function(){
     });
 	
 	
-	var instt;
-	var staffroomm;
-	var coursetypee;
+	
 });
 
 
 function changeStaffroom(val){
-	instt=val;
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -144,30 +141,6 @@ function edit_get(i){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
-
-function select_course(){
-	//加载课程信息
-	$.ajax({
-        url: "CourseControlServlet",
-        type: "POST",
-        dataType:"JSON",
-        data: {
-        	flag:"select_course"
-        },
-        success: function (data) {
-        	$(".inst_content tr").remove();
-        	 var str = "'确定要删除吗？'";
-             $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
- 	        });
-         },
-         error: function (jqXHR, textStatus, errorThrown) {
-             alert(errorThrown);
-         }
-    });
-}
-
-
 
 function add(){
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
@@ -239,6 +212,7 @@ function add(){
 				<div class="templatemo-content-widget white-bg"
 					style="padding: 15px">
 					<div class="row ">
+						<form action="CourseControlServlet" method="post">
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
 								<label class="control-label templatemo-block">开课学院</label> <select
 									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
@@ -262,12 +236,15 @@ function add(){
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
-								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
+								<button type="submit" class="templatemo-blue-button">Update</button>
 								<button type="reset" class="templatemo-white-button"
 									onclick="add()" style="margin-left: 10px">Add</button>
 								<button type="reset" class="templatemo-white-button"
 									style="margin-left: 10px">Import</button>
 							</div>
+							<input type="hidden" name="flag" value="select_course" />
+							
+						</form>
 					</div>
 				</div>
 
