@@ -493,15 +493,9 @@ public class CourseControlServlet extends HttpServlet {
 						course.setCoursetype(rs.getString("coursetype"));
 						courseList.add(course);
 					}
-					Gson gson = new Gson();
-					String json_list = gson.toJson(courseList);
-					response.setHeader("Cache-Control", "no-cache");// 去除缓存
-					response.setContentType("application/json;charset=utf-8");
-					PrintWriter out = response.getWriter();
-					out.print(json_list);
-					out.flush();
-					out.close();
+					System.out.println(courseList);
 					DBC.closeAll();
+					request.getRequestDispatcher("Course.jsp").forward(request, response);
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
