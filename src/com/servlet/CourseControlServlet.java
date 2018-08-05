@@ -77,39 +77,35 @@ public class CourseControlServlet extends HttpServlet {
 		} else {
 
 			// 获得所有数据
-			if (flag.equals("get_course")) {
-				try {
-					List<Course> courseList = new ArrayList<Course>();
-					List<Course> instList = new ArrayList<Course>();
-					List<Course> staffroomList = new ArrayList<Course>();
-					List<Course> coursetypeList = new ArrayList<Course>();
+						if (flag.equals("get_course")) {
+							try {
+								List<Course> courseList = new ArrayList<Course>();
 
-					Connection con = (Connection) DBC.getCon();
-					String sql = "select * from course,inst,coursetype,staffroom where "
-							+ "course.staffroomid = staffroom.staffroomid and staffroom.instid = inst.instid and course.coursetypeid=coursetype.coursetypeid";
-					Statement st = (Statement) con.createStatement();
-					ResultSet rs = st.executeQuery(sql);
-					while (rs.next()) {// 判断是否还有下一个数据
-						Course course = new Course();
-						course.setCourseid(rs.getInt("courseid"));
-						course.setCoursename(rs.getString("coursename"));
-						course.setStaffroomid(rs.getInt("staffroomid"));
-						course.setStaffroomname(rs.getString("staffroomname"));
-						course.setInstid(rs.getInt("instid"));
-						course.setInstname(rs.getString("instname"));
-						course.setCoursetypeid(rs.getInt("coursetypeid"));
-						course.setCoursetype(rs.getString("coursetype"));
-						courseList.add(course);
-					}
-					Gson gson = new Gson();
-					String json_list = gson.toJson(courseList);
-					response.setHeader("Cache-Control", "no-cache");// 去除缓存
-					response.setContentType("application/json;charset=utf-8");
-					PrintWriter out = response.getWriter();
-					out.print(json_list);
-					out.flush();
-					out.close();
-					DBC.closeAll();
+								List<Course> instList = new ArrayList<Course>();
+								List<Course> staffroomList = new ArrayList<Course>();
+								List<Course> coursetypeList = new ArrayList<Course>();
+
+								Connection con = (Connection) DBC.getCon();
+								String sql = "select * from course,inst,coursetype,staffroom where "
+										+ "course.staffroomid = staffroom.staffroomid and staffroom.instid = inst.instid and course.coursetypeid=coursetype.coursetypeid";
+								Statement st = (Statement) con.createStatement();
+								ResultSet rs = st.executeQuery(sql);
+								while (rs.next()) {// 判断是否还有下一个数据
+									Course course = new Course();
+									course.setCourseid(rs.getInt("courseid"));
+									course.setCoursename(rs.getString("coursename"));
+									course.setStaffroomid(rs.getInt("staffroomid"));
+									course.setStaffroomname(rs.getString("staffroomname"));
+									course.setInstid(rs.getInt("instid"));
+									course.setInstname(rs.getString("instname"));
+									course.setCoursetypeid(rs.getInt("coursetypeid"));
+									;
+									course.setCoursetype(rs.getString("coursetype"));
+									courseList.add(course);
+								}
+								request.setAttribute("C_list", courseList);
+								DBC.closeAll();
+								request.getRequestDispatcher("Course.jsp").forward(request, response);
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -462,12 +458,12 @@ public class CourseControlServlet extends HttpServlet {
 						++count;
 					}
 					if (!request.getParameter("staffroomid").equals("all")) {
-						sql += " and staffroom.staffroomid = ?";
+						sql += " and staffroom.staffroomid=?";
 						++flag_2;
 						++count;
 					}
 					if (!request.getParameter("coursetypeid").equals("all")) {
-						sql += " and course.coursetypeid = ?";
+						sql += " and course.coursetypeid=?";
 						++flag_3;
 					}
 					System.out.println(sql);
@@ -493,7 +489,7 @@ public class CourseControlServlet extends HttpServlet {
 						course.setCoursetype(rs.getString("coursetype"));
 						courseList.add(course);
 					}
-					System.out.println(courseList);
+					request.setAttribute("C_list", courseList);
 					DBC.closeAll();
 					request.getRequestDispatcher("Course.jsp").forward(request, response);
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {

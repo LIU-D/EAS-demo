@@ -59,28 +59,6 @@ $(document).ready(function(){
 
     });
 	
-	//加载课程信息
-	$.ajax({
-        url: "CourseControlServlet",
-        type: "GET",
-        dataType:"JSON",
-        data: {
-        	flag:"get_course"
-        },
-        success: function (data) {
-        	$(".inst_content tr").remove();
-        	 var str = "'确定要删除吗？'";
-             $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
- 	        });
-         },
-         error: function (jqXHR, textStatus, errorThrown) {
-             alert(errorThrown);
-         }
-    });
-	
-	
-	
 });
 
 
@@ -273,7 +251,25 @@ function add(){
 								</tr>
 							</thead>
 							<tbody class="course_content">
-
+								<%
+									request.getAttribute("C_list");
+								%>
+								<c:forEach var="course" items="${C_list}">
+									<c:set var="index" value="${index+1}" />
+									<tr>
+										<td>${index}.</td>
+										<td class="edit_courseid">${course.courseid}</td>
+										<td class="edit_coursename">${course.coursename}</td>
+										<td>${course.instname}</td>
+										<td>${course.staffroomname}</td>
+										<td>${course.coursetype}</td>
+										<td><a onclick="edit_get(${index})"
+											class="templatemo-edit-btn">Edit</a></td>
+										<td><a
+											href="CourseControlServlet?flag=delete_course&courseid=${course.courseid}"
+											class="templatemo-link" onclick="return confirm('确定要删除吗?')">Delete</a></td>
+									</tr>
+								</c:forEach>
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
