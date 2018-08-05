@@ -152,6 +152,28 @@ function edit_get(i,id){
 }
 
 function add(){
+	
+	$.ajax({
+        url: "SelectServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+			select:3,
+			date:new Date()
+        },
+        success: function (data) {
+            $("#option_add_tip option").remove();
+            $.each(data.instList, function(index, item) {
+            	$("#option_add_tip").append(
+         	    	"<option value="+item.instid+">" + item.instname+ "</option>");
+	        });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+
+    });
+	
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".add_close").click(function(){
 		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -260,13 +282,13 @@ function add(){
 								</tr>
 							</thead>
 							<tbody class="inst_content">
-								<tr><td  colspan="6" align="center">没有信息！</td></tr>
+								<!-- <tr><td  colspan="6" align="center">没有信息！</td></tr> -->
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
 										<form action="CourseControlServlet" method="post">
 											<div class="upd_con">教研室代码: <input name="staffroomid" value="" type="text" readonly="true" /> <br>
-												<br>单位名称：<select name="instid" class="" id="option_tip"></select>
+												<br>所属学院：<select name="instid" class="" id="option_tip"></select>
 												<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
 											</div>
 
@@ -322,31 +344,15 @@ function add(){
 		<div>
 			<form action="CourseControlServlet" method="post">
 				<div class="add_con">
-					课程代码: <input name="courseid" value="" type="text" /><br>
-					开课学院: <select name="instid">
-						<option value="0" selected>——————————</option>
-						<option value="1">数计学院</option>
-						<option value="2">文传学院</option>
-						<option value="3">资环学院</option>
-					</select><br> 开课教研室: <select name="staffroomid">
-						<option value="0" selected>——————————</option>
-						<option value="5623">军事理论与训练教研室</option>
-						<option value="9462">信息素质教研室</option>
-						<option value="9999">网络教学平台</option>
-					</select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
-					课程类型: <select name="coursetypeid">
-						<option value="0" selected>——————————</option>
-						<option value="1">理论课</option>
-						<option value="2">实验课</option>
-						<option value="3">实践课</option>
-						<option value="4">其他</option>
-					</select><br>
+				教研室代码: <input name="staffroomid" value="" type="text" /> <br>
+				<br>所属学院：<select name="instid" class="" id="option_add_tip"></select>
+				<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add" />
+				<input type="hidden" name="flag" value="add_staffroom" />
 			</form>
 		</div>
 	</div>
