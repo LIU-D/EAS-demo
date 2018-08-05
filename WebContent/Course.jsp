@@ -78,16 +78,10 @@ $(document).ready(function(){
              alert(errorThrown);
          }
     });
-	
-	
-	var instt;
-	var staffroomm;
-	var coursetypee;
 });
 
 
 function changeStaffroom(val){
-	instt=val;
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -146,16 +140,24 @@ function edit_get(i){
 }
 
 function select_course(){
+	var instid = $("#option_1 option:selected").val();
+	var staffroomid = $("#option_2 option:selected").val();
+	var coursetypeid = $("#option_3 option:selected").val();
+	console.log(instid);
+	console.log(typeof instid);
 	//加载课程信息
 	$.ajax({
         url: "CourseControlServlet",
         type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"select_course"
+        	flag:"select_course",
+        	instid:instid,
+        	staffroomid:staffroomid,
+        	coursetypeid:coursetypeid
         },
         success: function (data) {
-        	$(".inst_content tr").remove();
+        	$(".course_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
              	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
@@ -221,8 +223,7 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="CourseControlServlet?flag=get_course"
-							class="active">课程管理</a></li>
+						<li><a href="Course.jsp" class="active">课程管理</a></li>
 						<li><a href="">Dashboard</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>

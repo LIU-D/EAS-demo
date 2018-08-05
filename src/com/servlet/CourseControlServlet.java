@@ -471,7 +471,7 @@ public class CourseControlServlet extends HttpServlet {
 						++flag_3;
 					}
 					System.out.println(sql);
-					if(count==1) {
+					if(count==1 && flag_3==0) {
 						Statement st = (Statement) con.createStatement();
 						rs = st.executeQuery(sql);
 					}else {
