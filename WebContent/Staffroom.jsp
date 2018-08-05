@@ -226,7 +226,7 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="CourseControlServlet?flag=get_inst">学院管理</a></li>
+						<li><a href="Inst.jsp">学院管理</a></li>
 						<li><a href="Staffroom.jsp"	class="active">教研室管理</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>

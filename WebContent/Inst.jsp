@@ -31,11 +31,26 @@ $(document).ready(function(){
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
 	
+	$.ajax({
+        url: "CourseControlServlet",
+        type: "GET",
+        dataType:"JSON",
+        data: {
+        	flag:"get_inst"
+        },
+        success: function (data) {
+        	$(".inst_content tr").remove();
+        	 var str = "'确定要删除吗？'";
+             $.each(data, function(index, item) {
+             	$(".inst_content").append('<tr><td>'+(++index)+'.</td><td class="edit_instid">'+item.instid+'</td><td class="edit_instname">'+item.instname+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_inst&instid='+item.instid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+ 	        });
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             alert(errorThrown);
+         }
+
+    });
 	
-	var ss = $('.instidflag').val();
-	console.log(ss);
-	if(ss == 'IDalreadyexists')
-		alert(ss);
 	
 });
 
@@ -99,7 +114,7 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="CourseControlServlet?flag=get_inst" class="active">学院管理</a></li>
+						<li><a href="Inst.jsp" class="active">学院管理</a></li>
 						<li><a href="Staffroom.jsp">教研室管理</a></li>
 						<li><a href="">Overview</a></li>
 						<li><a href="login.html">Sign in form</a></li>
@@ -145,19 +160,8 @@ function add(){
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody>
-								<%request.getAttribute("list");%>
-								<c:forEach var="i" items="${list}">
-								<c:set var="index" value="${index+1}" /> 
-								<tr>
-									<td>${index}.</td>
-									<td class="edit_instid">${i.instid}</td>
-									<td class="edit_instname">${i.instname}</td>
-									<td><a onclick="edit_get(${index})" class="templatemo-edit-btn">Edit</a></td>
-									<td><a href="CourseControlServlet?flag=delete_inst&instid=${i.instid}" class="templatemo-link"
-											 onclick="return confirm('确定要删除吗?')">Delete</a></td>
-								</tr>
-								</c:forEach>
+							<tbody class="inst_content">
+								
 					<!------------------------------------------------------------------------------------------------------------------------------>
 									<div class="upd_tip">
 										<div>

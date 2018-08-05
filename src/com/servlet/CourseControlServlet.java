@@ -200,10 +200,15 @@ public class CourseControlServlet extends HttpServlet {
 						inst.setInstname(rs_1.getString("instname"));
 						instList.add(inst);
 					}
-					request.setAttribute("list", instList);
+					Gson gson = new Gson();
+					String json_list = gson.toJson(instList);
+					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+				    out.print(json_list);
+				    out.flush();
+					out.close();
 					DBC.closeAll();
-					request.getRequestDispatcher("Inst.jsp").forward(request, response);
-
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -322,7 +327,7 @@ public class CourseControlServlet extends HttpServlet {
 					DBC.executeUpdate(sql, param);
 
 					DBC.closeAll();
-					response.sendRedirect("Inst.jsp");
+					request.getRequestDispatcher("Inst.jsp").forward(request, response);
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
