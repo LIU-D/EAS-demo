@@ -85,17 +85,15 @@ public class CourseControlServlet extends HttpServlet {
 						course.setCoursetype(rs.getString("coursetype"));
 						courseList.add(course);
 					}
-					request.setAttribute("C_list", courseList);
-					// Gson gson = new Gson();
-					// String C_list = gson.toJson(courseList);
-					System.out.println(courseList);
-					// response.setCharacterEncoding("UTF-8");
-					// PrintWriter out = response.getWriter();
-					// out.print(C_list);
-
+					Gson gson = new Gson();
+					String json_list = gson.toJson(courseList);
+					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+				    out.print(json_list);
+				    out.flush();
+					out.close();
 					DBC.closeAll();
-					request.getRequestDispatcher("Course.jsp").forward(request, response);
-
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,7 +133,6 @@ public class CourseControlServlet extends HttpServlet {
 				    out.flush();
 					out.close();
 					DBC.closeAll();
-					request.getRequestDispatcher("Staffroom.jsp").forward(request, response);
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

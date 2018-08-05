@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>EAS-demo</title>
+<title>EMS-demo</title>
 
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +31,7 @@ $(document).ready(function(){
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
 	
-	
+	//加载联级菜单
 	$.ajax({
         url: "SelectServlet",
         type: "POST",
@@ -58,6 +58,28 @@ $(document).ready(function(){
         }
 
     });
+	
+	//加载课程信息
+	$.ajax({
+        url: "CourseControlServlet",
+        type: "GET",
+        dataType:"JSON",
+        data: {
+        	flag:"get_course"
+        },
+        success: function (data) {
+        	$(".inst_content tr").remove();
+        	 var str = "'确定要删除吗？'";
+             $.each(data, function(index, item) {
+             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+ 	        });
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             alert(errorThrown);
+         }
+    });
+	
+	
 	
 });
 
@@ -154,12 +176,10 @@ function add(){
 			<nav class="templatemo-left-nav">
 			<ul>
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
-				<li><a href="CourseControlServlet?flag=get_inst"><i
-						class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
+				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_course"
-					class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Course.jsp" class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign
 						Out</a></li>
@@ -247,26 +267,8 @@ function add(){
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody>
-								<%
-									request.getAttribute("C_list");
-								%>
-								<c:forEach var="course" items="${C_list}">
-									<c:set var="index" value="${index+1}" />
-									<tr>
-										<td>${index}.</td>
-										<td class="edit_courseid">${course.courseid}</td>
-										<td class="edit_coursename">${course.coursename}</td>
-										<td>${course.instname}</td>
-										<td>${course.staffroomname}</td>
-										<td>${course.coursetype}</td>
-										<td><a onclick="edit_get(${index})"
-											class="templatemo-edit-btn">Edit</a></td>
-										<td><a
-											href="CourseControlServlet?flag=delete_course&courseid=${course.courseid}"
-											class="templatemo-link" onclick="return confirm('确定要删除吗?')">Delete</a></td>
-									</tr>
-								</c:forEach>
+							<tbody class="course_content">
+								
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
