@@ -80,11 +80,14 @@ $(document).ready(function(){
     });
 	
 	
-	
+	var instt;
+	var staffroomm;
+	var coursetypee;
 });
 
 
 function changeStaffroom(val){
+	instt=val;
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -118,6 +121,8 @@ function changeStaffroom(val){
 	        },
 	        success: function (data) {
 	        	$("#option_2 option").remove();
+	        	$("#option_2").append(  
+    			"<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
@@ -140,13 +145,36 @@ function edit_get(i){
 	})
 }
 
+function select_course(){
+	//加载课程信息
+	$.ajax({
+        url: "CourseControlServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+        	flag:"select_course"
+        },
+        success: function (data) {
+        	$(".inst_content tr").remove();
+        	 var str = "'确定要删除吗？'";
+             $.each(data, function(index, item) {
+             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+ 	        });
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             alert(errorThrown);
+         }
+    });
+}
+
+
+
 function add(){
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".add_close").click(function(){
 		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
-
 </script>
 </head>
 <body>
@@ -179,7 +207,8 @@ function add(){
 				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="Course.jsp" class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Course.jsp" class="active"><i
+						class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign
 						Out</a></li>
@@ -210,36 +239,35 @@ function add(){
 				<div class="templatemo-content-widget white-bg"
 					style="padding: 15px">
 					<div class="row ">
-						<div class="col-lg-6 col-md-6 " style="width: 20%">
-							<label class="control-label templatemo-block">开课学院</label> <select
-								onchange="changeStaffroom(this.value)" class="form-control"
-								id="option_1">
-								<option value="all" checked>全部</option>
-							</select>
-						</div>
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">开课学院</label> <select
+									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
+									id="option_1">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
 
-						<div class="col-lg-6 col-md-6 " style="width: 25%">
-							<label class="control-label templatemo-block">开课教研室</label> <select
-								class="form-control" id="option_2">
-								<option value="all" checked>全部</option>
-							</select>
-						</div>
+							<div class="col-lg-6 col-md-6 " style="width: 25%">
+								<label class="control-label templatemo-block">开课教研室</label> <select
+									name="staffroomid" class="form-control" id="option_2">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
 
-						<div class="col-lg-6 col-md-6 " style="width: 20%">
-							<label class="control-label templatemo-block">课程类型</label> <select
-								class="form-control" id="option_3">
-								<option value="all" checked>全部</option>
-							</select>
-						</div>
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">课程类型</label> <select
+									name="coursetypeid" class="form-control" id="option_3">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
 
-						<div class="col-lg-6 col-md-6 "
-							style="width: 35%; padding-top: 16px">
-							<button type="submit" class="templatemo-blue-button">Update</button>
-							<button type="reset" class="templatemo-white-button"
-								onclick="add()" style="margin-left: 10px">Add</button>
-							<button type="reset" class="templatemo-white-button"
-								style="margin-left: 10px">Import</button>
-						</div>
+							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
+								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
+								<button type="reset" class="templatemo-white-button"
+									onclick="add()" style="margin-left: 10px">Add</button>
+								<button type="reset" class="templatemo-white-button"
+									style="margin-left: 10px">Import</button>
+							</div>
 					</div>
 				</div>
 
@@ -268,7 +296,7 @@ function add(){
 								</tr>
 							</thead>
 							<tbody class="course_content">
-								
+
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>

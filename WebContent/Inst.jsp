@@ -102,7 +102,7 @@ function add(){
 				<li><a href="CourseControlServlet?flag=get_inst"  class="active"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="CourseControlServlet?flag=get_course"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Course.jsp"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="index.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>

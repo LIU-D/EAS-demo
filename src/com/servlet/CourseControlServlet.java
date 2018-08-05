@@ -2,6 +2,7 @@ package com.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,11 +25,28 @@ import com.mod.JsonSelect;
 import com.mod.Staffroom;
 import com.mysql.jdbc.Connection;
 
+
 /**
  * Servlet implementation class CourseControlServlet
  */
 @WebServlet("/CourseControlServlet")
 public class CourseControlServlet extends HttpServlet {
+
+	/*public String[] Add(String[] temp1, String[] temp2)// 两个字符串数组
+	{
+		String[] newStr = new String[temp1.length + temp2.length];
+		int i = 0;
+		for (int i1 = 0; i1 < temp1.length; i1++) {
+			newStr[i1] = temp1[i1];
+			i1++;
+		}
+		for (int i1 = temp1.length; i1 < temp2.length; i1++) {
+			newStr[i1] = temp2[i1];
+			i1++;
+		}
+		return newStr;
+	}*/
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -62,7 +80,6 @@ public class CourseControlServlet extends HttpServlet {
 			if (flag.equals("get_course")) {
 				try {
 					List<Course> courseList = new ArrayList<Course>();
-
 					List<Course> instList = new ArrayList<Course>();
 					List<Course> staffroomList = new ArrayList<Course>();
 					List<Course> coursetypeList = new ArrayList<Course>();
@@ -81,17 +98,16 @@ public class CourseControlServlet extends HttpServlet {
 						course.setInstid(rs.getInt("instid"));
 						course.setInstname(rs.getString("instname"));
 						course.setCoursetypeid(rs.getInt("coursetypeid"));
-						;
 						course.setCoursetype(rs.getString("coursetype"));
 						courseList.add(course);
 					}
 					Gson gson = new Gson();
 					String json_list = gson.toJson(courseList);
-					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
 					response.setContentType("application/json;charset=utf-8");
 					PrintWriter out = response.getWriter();
-				    out.print(json_list);
-				    out.flush();
+					out.print(json_list);
+					out.flush();
 					out.close();
 					DBC.closeAll();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
@@ -100,6 +116,7 @@ public class CourseControlServlet extends HttpServlet {
 				}
 			} // flag ==get_course
 
+			// 获得教研室数据
 			if (flag.equals("get_staffroom")) {
 				try {
 					List<InstStaffroom> List = new ArrayList<InstStaffroom>();
@@ -126,11 +143,11 @@ public class CourseControlServlet extends HttpServlet {
 					}
 					Gson gson = new Gson();
 					String json_list = gson.toJson(List);
-					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
 					response.setContentType("application/json;charset=utf-8");
 					PrintWriter out = response.getWriter();
-				    out.print(json_list);
-				    out.flush();
+					out.print(json_list);
+					out.flush();
 					out.close();
 					DBC.closeAll();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
@@ -139,15 +156,14 @@ public class CourseControlServlet extends HttpServlet {
 				}
 
 			} // flag == get_staffroom
-			
-			
+
 			if (flag.equals("select_staffroom")) {
 				try {
 					List<InstStaffroom> List = new ArrayList<InstStaffroom>();
 					DBC.getCon();
 					String sql_1 = "select * from staffroom where instid = ?";
 					String[] param = { request.getParameter("instid") };
-					ResultSet rs_1 = DBC.executeQuery(sql_1,param);
+					ResultSet rs_1 = DBC.executeQuery(sql_1, param);
 					while (rs_1.next()) {// 判断是否还有下一个数据
 						InstStaffroom item = new InstStaffroom();
 						Staffroom staffroom = new Staffroom();
@@ -167,14 +183,14 @@ public class CourseControlServlet extends HttpServlet {
 							}
 						}
 					}
-						
+
 					Gson gson = new Gson();
 					String json_list = gson.toJson(List);
-					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
 					response.setContentType("application/json;charset=utf-8");
 					PrintWriter out = response.getWriter();
-				    out.print(json_list);
-				    out.flush();
+					out.print(json_list);
+					out.flush();
 					out.close();
 					DBC.closeAll();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
@@ -199,11 +215,11 @@ public class CourseControlServlet extends HttpServlet {
 					}
 					Gson gson = new Gson();
 					String json_list = gson.toJson(instList);
-					response.setHeader("Cache-Control", "no-cache");//去除缓存
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
 					response.setContentType("application/json;charset=utf-8");
 					PrintWriter out = response.getWriter();
-				    out.print(json_list);
-				    out.flush();
+					out.print(json_list);
+					out.flush();
 					out.close();
 					DBC.closeAll();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
@@ -227,22 +243,22 @@ public class CourseControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // flag=delete_inst
-			
-			// 删除教研室
-						if (flag.equals("delete_staffroom")) {
-							try {
-								DBC.getCon();
-								String sql = "delete from staffroom where staffroomid= ?";
-								String[] param = { request.getParameter("staffroomid"), };
-								DBC.executeUpdate(sql, param);
-								DBC.closeAll();
-								response.sendRedirect("Staffroom.jsp");
 
-							} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} // flag=delete_staffroom
+			// 删除教研室
+			if (flag.equals("delete_staffroom")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from staffroom where staffroomid= ?";
+					String[] param = { request.getParameter("staffroomid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Staffroom.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_staffroom
 
 			// 删除课程
 			if (flag.equals("delete_course")) {
@@ -364,29 +380,30 @@ public class CourseControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
-			
+
 			// 增加教研室
-						if (flag.equals("add_staffroom")) {
-							try {
-								DBC.getCon();
-								String sql = "insert into staffroom(instid,staffroomname,staffroomid)values(?,?,?)";
-								String[] param = { request.getParameter("instid"), request.getParameter("staffroomname"),
-										request.getParameter("staffroomid")};
-								DBC.executeUpdate(sql, param);
-								DBC.closeAll();
-								response.sendRedirect("Staffroom.jsp");
-							} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+			if (flag.equals("add_staffroom")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into staffroom(instid,staffroomname,staffroomid)values(?,?,?)";
+					String[] param = { request.getParameter("instid"), request.getParameter("staffroomname"),
+							request.getParameter("staffroomid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Staffroom.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
 			// 修改教研室
 			if (flag.equals("update_staffroom")) {
 				try {
 					DBC.getCon();
 					String sql = "update staffroom set staffroomname = ?,instid = ? where staffroomid = ?";
-					String[] param = { request.getParameter("staffroomname"),request.getParameter("instid"),request.getParameter("staffroomid")};
+					String[] param = { request.getParameter("staffroomname"), request.getParameter("instid"),
+							request.getParameter("staffroomid") };
 					System.out.println(param[0]);
 					System.out.println(param[1]);
 					DBC.executeUpdate(sql, param);
@@ -428,6 +445,68 @@ public class CourseControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // if(flag=query)
+
+			// 选择数据
+			if (flag.equals("select_course")) {
+				try {
+					int count = 1;
+					int flag_1=0,flag_2=0,flag_3=0;
+					List<Course> courseList = new ArrayList<Course>();
+					Connection con = (Connection) DBC.getCon();
+					ResultSet rs = null;
+					String sql = "select * from course,inst,coursetype,staffroom where "
+							+ "course.staffroomid = staffroom.staffroomid and staffroom.instid = inst.instid and course.coursetypeid=coursetype.coursetypeid";
+					if (!request.getParameter("instid").equals("all")) {
+						sql += " and inst.instid = ?";
+						++flag_1;
+						++count;
+					}
+					if (!request.getParameter("staffroomid").equals("all")) {
+						sql += " and staffroom.staffroomid = ?";
+						++flag_2;
+						++count;
+					}
+					if (!request.getParameter("coursetypeid").equals("all")) {
+						sql += " and course.coursetypeid = ?";
+						++flag_3;
+					}
+					System.out.println(sql);
+					if(count==1) {
+						Statement st = (Statement) con.createStatement();
+						rs = st.executeQuery(sql);
+					}else {
+						PreparedStatement ps = con.prepareStatement(sql);
+						if(flag_1!=0) ps.setString(flag_1,request.getParameter("instid"));
+						if(flag_2!=0) ps.setString(count-flag_2,request.getParameter("staffroomid"));
+						if(flag_3!=0) ps.setString(count,request.getParameter("coursetypeid"));
+						rs = ps.executeQuery();
+					}
+					while (rs.next()) {// 判断是否还有下一个数据
+						Course course = new Course();
+						course.setCourseid(rs.getInt("courseid"));
+						course.setCoursename(rs.getString("coursename"));
+						course.setStaffroomid(rs.getInt("staffroomid"));
+						course.setStaffroomname(rs.getString("staffroomname"));
+						course.setInstid(rs.getInt("instid"));
+						course.setInstname(rs.getString("instname"));
+						course.setCoursetypeid(rs.getInt("coursetypeid"));
+						course.setCoursetype(rs.getString("coursetype"));
+						courseList.add(course);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(courseList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag ==select_course
 
 		} // else
 
