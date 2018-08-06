@@ -367,8 +367,8 @@ public class CourseControlServlet extends HttpServlet {
 			if (flag.equals("update_course")) {
 				try {
 					DBC.getCon();
-					String sql = "update course set coursename = ? where courseid = ?";
-					String[] param = { request.getParameter("coursename"), request.getParameter("courseid"), };
+					String sql = "update course set coursename = ?,staffroomid=?,coursetypeid=? where courseid = ?";
+					String[] param = { request.getParameter("coursename"),request.getParameter("staffroomid"),request.getParameter("coursetypeid"), request.getParameter("courseid"), };
 					System.out.println(param[0]);
 					System.out.println(param[1]);
 					DBC.executeUpdate(sql, param);
