@@ -164,7 +164,6 @@ function edit_get(i,instid,staffroomid,coursetypeid){
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
         }
-
     });
 	
 	$.ajax({
