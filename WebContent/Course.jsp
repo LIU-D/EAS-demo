@@ -41,15 +41,15 @@ $(document).ready(function(){
         },
         success: function (data) {
             $.each(data.instList, function(index, item) {
-	            $("#option_1").append(  
+	            $("#loading_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
 	        });
             $.each(data.staffroomList, function(index, item) {
-	            $("#option_2").append(  
+	            $("#loading_option_2").append(  
 	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
 	        });
             $.each(data.typeList, function(index, item) {
-	            $("#option_3").append(  
+	            $("#loading_option_3").append(  
 	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
@@ -91,11 +91,11 @@ function changeStaffroom(val){
 				select:3
 	        },
 	        success: function (data) {
-	        	$("#option_2 option").remove();
-	        	 $("#option_2").append(  
+	        	$("#loading_option_2 option").remove();
+	        	 $("#loading_option_2").append(  
 			    			"<option select='select' value='all'>全部</option>");
 	            $.each(data.staffroomList, function(index, item) {
-		            $("#option_2").append(  
+		            $("#loading_option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
 		        });
 	        },
@@ -114,11 +114,11 @@ function changeStaffroom(val){
 				instid:val
 	        },
 	        success: function (data) {
-	        	$("#option_2 option").remove();
-	        	$("#option_2").append(  
+	        	$("#loading_option_2 option").remove();
+	        	$("#loading_option_2").append(  
     			"<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
-		            $("#option_2").append(  
+		            $("#loading_option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
 		        });
 	        },
@@ -140,9 +140,9 @@ function edit_get(i){
 }
 
 function select_course(){
-	var instid = $("#option_1 option:selected").val();
-	var staffroomid = $("#option_2 option:selected").val();
-	var coursetypeid = $("#option_3 option:selected").val();
+	var instid = $("#loading_option_1 option:selected").val();
+	var staffroomid = $("#loading_option_2 option:selected").val();
+	var coursetypeid = $("#loading_option_3 option:selected").val();
 	console.log(instid);
 	console.log(typeof instid);
 	//加载课程信息
@@ -172,11 +172,93 @@ function select_course(){
 
 
 function add(){
+	//加载联级菜单
+	$.ajax({
+        url: "SelectServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+			select:3
+        },
+        success: function (data) {
+        	$("#add_option_1 option").remove();
+        	$("#add_option_2 option").remove();
+        	$("#add_option_3 option").remove();
+        	$("#add_option_1").append("<option value='all'>全部</option>");
+        	$("#add_option_2").append("<option value='all'>全部</option>");
+        	$("#add_option_3").append("<option value='all'>全部</option>");
+            $.each(data.instList, function(index, item) {
+	            $("#add_option_1").append(  
+	    			"<option value="+item.instid+">" + item.instname+ "</option>");
+	        });
+            $.each(data.staffroomList, function(index, item) {
+	            $("#add_option_2").append(  
+	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	        });
+            $.each(data.typeList, function(index, item) {
+	            $("#add_option_3").append(  
+	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
+	        });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+
+    });
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".add_close").click(function(){
 		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
+
+function add_changeStaffroom(val){
+	if(val == 'all'){
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:3
+	        },
+	        success: function (data) {
+	        	$("#add_option_2 option").remove();
+	        	 $("#add_option_2").append(  
+			    			"<option select='select' value='all'>全部</option>");
+	            $.each(data.staffroomList, function(index, item) {
+		            $("#add_option_2").append(  
+		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }
+
+	    });
+	}else{
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:1,
+				instid:val
+	        },
+	        success: function (data) {
+	        	$("#add_option_2 option").remove();
+	        	$("#add_option_2").append(  
+    			"<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#add_option_2").append(  
+		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	}//else
+}
+
 </script>
 </head>
 <body>
@@ -243,21 +325,21 @@ function add(){
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
 								<label class="control-label templatemo-block">开课学院</label> <select
 									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
-									id="option_1">
+									id="loading_option_1">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 25%">
 								<label class="control-label templatemo-block">开课教研室</label> <select
-									name="staffroomid" class="form-control" id="option_2">
+									name="staffroomid" class="form-control" id="loading_option_2">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
 								<label class="control-label templatemo-block">课程类型</label> <select
-									name="coursetypeid" class="form-control" id="option_3">
+									name="coursetypeid" class="form-control" id="loading_option_3">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
@@ -361,24 +443,9 @@ function add(){
 			<form action="CourseControlServlet" method="post">
 				<div class="add_con">
 					课程代码: <input name="courseid" value="" type="text" /><br>
-					开课学院: <select name="instid">
-						<option value="0" selected>——————————</option>
-						<option value="1">数计学院</option>
-						<option value="2">文传学院</option>
-						<option value="3">资环学院</option>
-					</select><br> 开课教研室: <select name="staffroomid">
-						<option value="0" selected>——————————</option>
-						<option value="5623">军事理论与训练教研室</option>
-						<option value="9462">信息素质教研室</option>
-						<option value="9999">网络教学平台</option>
-					</select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
-					课程类型: <select name="coursetypeid">
-						<option value="0" selected>——————————</option>
-						<option value="1">理论课</option>
-						<option value="2">实验课</option>
-						<option value="3">实践课</option>
-						<option value="4">其他</option>
-					</select><br>
+					开课学院: <select onchange="add_changeStaffroom(this.value)" id="add_option_1" name="instid"></select><br> 
+					开课教研室: <select id="add_option_2" name="staffroomid"></select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
+					课程类型: <select id="add_option_3" name="coursetypeid"></select><br>
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
