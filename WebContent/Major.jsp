@@ -397,8 +397,8 @@ function edit_changeStaffroom(val){
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
 				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="Teacher.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
-				<li><a href="Student.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="Course.jsp"  class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Student.jsp"  class="active"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
+				<li><a href="Course.jsp"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="Evaluation.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>
@@ -410,10 +410,9 @@ function edit_changeStaffroom(val){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="Course.jsp" class="active">课程管理</a></li>
-						<li><a href="">Dashboard</a></li>
-						<li><a href="">Overview</a></li>
-						<li><a href="login.html">Sign in form</a></li>
+						<li><a href="Student.jsp">学生管理</a></li>
+						<li><a href="Class.jsp">班级管理</a></li>
+						<li><a href="Major.jsp" class="active">专业管理</a></li>
 					</ul>
 					</nav>
 				</div>
@@ -428,14 +427,14 @@ function edit_changeStaffroom(val){
 					style="padding: 15px">
 					<div class="row ">
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
-								<label class="control-label templatemo-block">开课学院</label> <select
+								<label class="control-label templatemo-block">所属学院</label> <select
 									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
 									id="loading_option_1">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
-							<div class="col-lg-6 col-md-6 " style="width: 25%">
+							<!-- <div class="col-lg-6 col-md-6 " style="width: 25%">
 								<label class="control-label templatemo-block">开课教研室</label> <select
 									name="staffroomid" class="form-control" id="loading_option_2">
 									<option value="all" checked>全部</option>
@@ -447,7 +446,7 @@ function edit_changeStaffroom(val){
 									name="coursetypeid" class="form-control" id="loading_option_3">
 									<option value="all" checked>全部</option>
 								</select>
-							</div>
+							</div> -->
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
 								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>

@@ -44,13 +44,13 @@ $(document).ready(function(){
 	            $("#loading_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
 	        });
-            $.each(data.staffroomList, function(index, item) {
+            $.each(data.majorList, function(index, item) {
 	            $("#loading_option_2").append(  
-	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	    			"<option value="+item.majorid+">" + item.majorname+ "</option>");
 	        });
-            $.each(data.typeList, function(index, item) {
+            $.each(data.classList, function(index, item) {
 	            $("#loading_option_3").append(  
-	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
+	    			"<option value="+item.classid+">" + item.classname+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -59,19 +59,18 @@ $(document).ready(function(){
 
     });
 	
-	//加载课程信息
+	//加载学生信息
 	$.ajax({
-        url: "CourseControlServlet",
-        type: "GET",
+        url: "StudentControlServlet",
+        type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"get_course"
+        	flag:"loading_student"
         },
         success: function (data) {
-        	$(".inst_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".student_content").append('<tr><td>'+(++index)+'.</td><td class="edit_studentid">'+item.studentid+'</td><td class="edit_studentname">'+item.studentname+'</td><td>'+item.instname+'</td><td>'+item.majorname+'</td><td>'+item.classname+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.majorid+','+item.classid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_student&studentid='+item.studentid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -81,7 +80,7 @@ $(document).ready(function(){
 });
 
 
-function changeStaffroom(val){
+function changeMajor(val){
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -94,9 +93,9 @@ function changeStaffroom(val){
 	        	$("#loading_option_2 option").remove();
 	        	 $("#loading_option_2").append(  
 			    			"<option select='select' value='all'>全部</option>");
-	            $.each(data.staffroomList, function(index, item) {
+	            $.each(data.majorList, function(index, item) {
 		            $("#loading_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		    			"<option value="+item.majorid+">" + item.majorname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
@@ -110,7 +109,7 @@ function changeStaffroom(val){
 	        type: "POST",
 	        dataType:"JSON",
 	        data: {
-				select:1,
+				select:"changeMajor",
 				instid:val
 	        },
 	        success: function (data) {
@@ -119,7 +118,55 @@ function changeStaffroom(val){
     			"<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#loading_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		    			"<option value="+item.majorid+">" + item.majorname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	}//else
+}
+
+function changeClassroom(val){
+	if(val == 'all'){
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:3
+	        },
+	        success: function (data) {
+	        	$("#loading_option_3 option").remove();
+	        	 $("#loading_option_3").append(  
+			    			"<option select='select' value='all'>全部</option>");
+	            $.each(data.classList, function(index, item) {
+		            $("#loading_option_3").append(  
+		    			"<option value="+item.classid+">" + item.classname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }
+
+	    });
+	}else{
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:"changeClassroom",
+				majorid:val
+	        },
+	        success: function (data) {
+	        	$("#loading_option_3 option").remove();
+	        	$("#loading_option_3").append(  
+    			"<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#loading_option_3").append(  
+		    			"<option value="+item.classid+">" + item.classname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
@@ -274,7 +321,7 @@ function add(){
 	})
 }
 
-function add_changeStaffroom(val){
+function add_changeMajor(val){
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -397,8 +444,8 @@ function edit_changeStaffroom(val){
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
 				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="Teacher.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
-				<li><a href="Student.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="Course.jsp"  class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Student.jsp" class="active"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
+				<li><a href="Course.jsp"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="Evaluation.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>
@@ -410,10 +457,9 @@ function edit_changeStaffroom(val){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="Course.jsp" class="active">课程管理</a></li>
-						<li><a href="">Dashboard</a></li>
-						<li><a href="">Overview</a></li>
-						<li><a href="login.html">Sign in form</a></li>
+						<li><a href="Student.jsp" class="active">学生管理</a></li>
+						<li><a href="Class.jsp">班级管理</a></li>
+						<li><a href="Major.jsp">专业管理</a></li>
 					</ul>
 					</nav>
 				</div>
@@ -428,29 +474,28 @@ function edit_changeStaffroom(val){
 					style="padding: 15px">
 					<div class="row ">
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
-								<label class="control-label templatemo-block">开课学院</label> <select
-									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
+								<label class="control-label templatemo-block">所属学院</label> <select
+									onchange="changeMajor(this.value)" name="instid" class="form-control"
 									id="loading_option_1">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 25%">
-								<label class="control-label templatemo-block">开课教研室</label> <select
-									name="staffroomid" class="form-control" id="loading_option_2">
+								<label class="control-label templatemo-block">所属专业</label> <select onchange="changeClassroom(this.value)" name="majorid" class="form-control" id="loading_option_2">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
-								<label class="control-label templatemo-block">课程类型</label> <select
-									name="coursetypeid" class="form-control" id="loading_option_3">
+								<label class="control-label templatemo-block">所属班级</label> <select
+									name="classid" class="form-control" id="loading_option_3">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
-								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
+								<button onclick="select_student()" type="submit" class="templatemo-blue-button">Update</button>
 								<button type="reset" class="templatemo-white-button"
 									onclick="add()" style="margin-left: 10px">Add</button>
 								<button type="reset" class="templatemo-white-button"
@@ -470,31 +515,31 @@ function edit_changeStaffroom(val){
 									<td><a href="" class="white-text templatemo-sort-by">#
 											<span class="caret"></span>
 									</a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程代码<span
+									<td><a href="" class="white-text templatemo-sort-by">学号<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程名称<span
+									<td><a href="" class="white-text templatemo-sort-by">姓名<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课学院<span
+									<td><a href="" class="white-text templatemo-sort-by">所属学院<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课教研室<span
+									<td><a href="" class="white-text templatemo-sort-by">所属专业<span
 											class="caret"></span></a></td>
-									<td>课程类别</td>
+									<td>所属班级</td>
 									<td>Edit</td>
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody class="course_content">
+							<tbody class="student_content">
 
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
-										<form action="CourseControlServlet" method="post">
+										<form action="StudentControlServlet" method="post">
 											<div class="upd_con">
-												课程代码: <input readonly="true" name="courseid" value="" type="text" /><br>
-												开课学院: <select onchange="edit_changeStaffroom(this.value)" id="edit_option_1" name="instid"></select><br> 
-												开课教研室: <select id="edit_option_2" name="staffroomid"></select><br> 
-												课程名称: <input type="text" name="coursename" value="" /><br>
-												课程类型: <select id="edit_option_3" name="coursetypeid"></select>
+												学号: <input readonly="true" name="courseid" value="" type="text" /><br>
+												姓名: <input name="courseid" value="" type="text" /><br>
+												所属学院: <select onchange="edit_changeStaffroom(this.value)" id="edit_option_1" name="instid"></select><br> 
+												所属专业: <select id="edit_option_2" name="staffroomid"></select><br>
+												所属班级: <select id="edit_option_3" name="coursetypeid"></select>
 											</div>
 
 											<div class="upd_updbtn">

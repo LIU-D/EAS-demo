@@ -80,10 +80,6 @@ public class CourseControlServlet extends HttpServlet {
 			if (flag.equals("get_course")) {
 				try {
 					List<Course> courseList = new ArrayList<Course>();
-					List<Course> instList = new ArrayList<Course>();
-					List<Course> staffroomList = new ArrayList<Course>();
-					List<Course> coursetypeList = new ArrayList<Course>();
-
 					Connection con = (Connection) DBC.getCon();
 					String sql = "select * from course,inst,coursetype,staffroom where "
 							+ "course.staffroomid = staffroom.staffroomid and staffroom.instid = inst.instid and course.coursetypeid=coursetype.coursetypeid";

@@ -15,9 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dao.DBC;
 import com.google.gson.Gson;
+import com.mod.Classroom;
 import com.mod.CourseType;
 import com.mod.Inst;
 import com.mod.JsonSelect;
+import com.mod.Major;
 import com.mod.Staffroom;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
@@ -87,9 +89,10 @@ public class SelectServlet extends HttpServlet {
 			List<Inst> instList = new ArrayList<Inst>();
 			List<Staffroom> staffroomList = new ArrayList<Staffroom>();
 			List<CourseType> typeList = new ArrayList<CourseType>();
+			List<Major> majorList = new ArrayList<Major>();
+			List<Classroom> classList = new ArrayList<Classroom>();
 			try {
 				Connection con = (Connection) DBC.getCon();
-				
 				String sql_1 = "select * from inst";
 				Statement st_1 = (Statement) con.createStatement();
 				ResultSet rs_1 = st_1.executeQuery(sql_1);
@@ -118,7 +121,24 @@ public class SelectServlet extends HttpServlet {
 					typeList.add(c);
 				}
 				
-				JsonSelect jsonSelect = new JsonSelect(instList,staffroomList,typeList);
+				String sql_4= "select * from major";
+				ResultSet rs_4 = st_1.executeQuery(sql_4);
+				while (rs_4.next()) {// 判断是否还有下一个数据
+					Major m = new Major();
+					m.setMajorid(rs_4.getInt("majorid"));
+					m.setMajorname(rs_4.getString("majorname"));
+					majorList.add(m);
+				}
+				
+				String sql_5= "select * from classroom";
+				ResultSet rs_5 = st_1.executeQuery(sql_5);
+				while (rs_5.next()) {// 判断是否还有下一个数据
+					Classroom c = new Classroom();
+					c.setClassid(rs_5.getInt("classid"));
+					c.setClassname(rs_5.getString("classname"));
+					classList.add(c);
+				}
+				JsonSelect jsonSelect = new JsonSelect(instList,staffroomList,typeList,majorList,classList);
 				
 				Gson gson = new Gson();
 				String json_list = gson.toJson(jsonSelect);
@@ -192,6 +212,63 @@ public class SelectServlet extends HttpServlet {
 			}
 		}//select == 2
 		
+		
+		if(select.equals("changeMajor")) {
+			try {
+				List<Major> majorList = new ArrayList<Major>();
+				DBC.getCon();
+				String sql_2 = "select * from major where instid = ?";
+				String[] param = { request.getParameter("instid") };
+				ResultSet rs_2 = DBC.executeQuery(sql_2, param);
+				while (rs_2.next()) {// 判断是否还有下一个数据
+					Major major = new Major();
+					major.setMajorid(rs_2.getInt("majorid"));
+					major.setMajorname(rs_2.getString("majorname"));
+					majorList.add(major);
+				}
+				Gson gson = new Gson();
+				String json_list = gson.toJson(majorList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}//select == changeMajor
+		
+		if(select.equals("changeClassroom")) {
+			System.out.println(request.getParameter("majorid"));
+			try {
+				List<Classroom> classList = new ArrayList<Classroom>();
+				DBC.getCon();
+				String sql_2 = "select * from classroom where majorid = ?";
+				String[] param = { request.getParameter("majorid") };
+				ResultSet rs_2 = DBC.executeQuery(sql_2, param);
+				while (rs_2.next()) {// 判断是否还有下一个数据
+					Classroom classroom = new Classroom();
+					classroom.setClassid(rs_2.getInt("classid"));
+					classroom.setClassname(rs_2.getString("classname"));
+					classList.add(classroom);
+				}
+				Gson gson = new Gson();
+				String json_list = gson.toJson(classList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}//select == changeClassroom
 		
 		doGet(request, response);
 	}
