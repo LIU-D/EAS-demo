@@ -352,7 +352,7 @@ public class CourseControlServlet extends HttpServlet {
 				try {
 					DBC.getCon();
 					String sql = "insert into course(courseid,coursename,staffroomid,coursetypeid)values(?,?,?,?)";
-					String[] param = { request.getParameter("courseid"), request.getParameter("coursename"),
+					String[] param = { request.getParameter("courseid"),request.getParameter("coursename"),
 							request.getParameter("staffroomid"), request.getParameter("coursetypeid") };
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();

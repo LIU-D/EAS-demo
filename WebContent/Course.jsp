@@ -185,8 +185,6 @@ function add(){
         	$("#add_option_2 option").remove();
         	$("#add_option_3 option").remove();
         	$("#add_option_1").append("<option value='all'>全部</option>");
-        	$("#add_option_2").append("<option value='all'>全部</option>");
-        	$("#add_option_3").append("<option value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
 	            $("#add_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
@@ -245,8 +243,6 @@ function add_changeStaffroom(val){
 	        },
 	        success: function (data) {
 	        	$("#add_option_2 option").remove();
-	        	$("#add_option_2").append(  
-    			"<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#add_option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
