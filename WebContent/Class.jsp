@@ -469,15 +469,15 @@ function edit_changeStaffroom(val){
 									<td><a href="" class="white-text templatemo-sort-by">#
 											<span class="caret"></span>
 									</a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程代码<span
+									<td><a href="" class="white-text templatemo-sort-by">班级代码<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程名称<span
+									<td><a href="" class="white-text templatemo-sort-by">学院<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课学院<span
+									<td><a href="" class="white-text templatemo-sort-by">专业<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课教研室<span
+									<td><a href="" class="white-text templatemo-sort-by">年级<span
 											class="caret"></span></a></td>
-									<td>课程类别</td>
+									<td>班级</td>
 									<td>Edit</td>
 									<td>Delete</td>
 								</tr>

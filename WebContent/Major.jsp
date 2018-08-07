@@ -31,47 +31,38 @@ $(document).ready(function(){
 	$(".upd_tip").hide(); //先让div隐藏
 	$(".add_tip").hide(); //先让div隐藏
 	
-	//加载联级菜单
+	//加载下拉菜单
 	$.ajax({
         url: "SelectServlet",
         type: "POST",
         dataType:"JSON",
         data: {
-			select:3
+			select:0
         },
         success: function (data) {
-            $.each(data.instList, function(index, item) {
+            $.each(data, function(index, item) {
 	            $("#loading_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
-	        });
-            $.each(data.staffroomList, function(index, item) {
-	            $("#loading_option_2").append(  
-	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
-	        });
-            $.each(data.typeList, function(index, item) {
-	            $("#loading_option_3").append(  
-	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
         }
-
     });
 	
-	//加载课程信息
+	//加载专业信息
 	$.ajax({
-        url: "CourseControlServlet",
-        type: "GET",
+        url: "StudentControlServlet",
+        type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"get_course"
+        	flag:"loading_major"
         },
         success: function (data) {
-        	$(".inst_content tr").remove();
+        	$(".major_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".major_content").append('<tr><td>'+(++index)+'.</td><td class="edit_majorid">'+item.majorid+'</td><td>'+item.instname+'</td><td class="edit_majorname">'+item.majorname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_major&majorid='+item.majorid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -80,7 +71,7 @@ $(document).ready(function(){
     });
 });
 
-
+/*
 function changeStaffroom(val){
 	if(val == 'all'){
 		$.ajax({
@@ -203,64 +194,71 @@ function edit_get(i,instid,staffroomid,coursetypeid){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
-
-function select_course(){
+*/
+function select_major(){
 	var instid = $("#loading_option_1 option:selected").val();
-	var staffroomid = $("#loading_option_2 option:selected").val();
-	var coursetypeid = $("#loading_option_3 option:selected").val();
-	console.log(instid);
-	console.log(typeof instid);
-	//加载课程信息
-	$.ajax({
-        url: "CourseControlServlet",
-        type: "POST",
-        dataType:"JSON",
-        data: {
-        	flag:"select_course",
-        	instid:instid,
-        	staffroomid:staffroomid,
-        	coursetypeid:coursetypeid
-        },
-        success: function (data) {
-        	$(".course_content tr").remove();
-        	 var str = "'确定要删除吗？'";
-             $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
- 	        });
-         },
-         error: function (jqXHR, textStatus, errorThrown) {
-             alert(errorThrown);
-         }
-    });
+	if(instid == 'all'){
+		//加载专业信息
+		$.ajax({
+	        url: "StudentControlServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+	        	flag:"loading_major"
+	        },
+	        success: function (data) {
+	        	$(".major_content tr").remove();
+	        	 var str = "'确定要删除吗？'";
+	             $.each(data, function(index, item) {
+	             	$(".major_content").append('<tr><td>'+(++index)+'.</td><td class="edit_majorid">'+item.majorid+'</td><td>'+item.instname+'</td><td class="edit_majorname">'+item.majorname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_major&majorid='+item.majorid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+	 	        });
+	         },
+	         error: function (jqXHR, textStatus, errorThrown) {
+	             alert(errorThrown);
+	         }
+	    });
+	}else{
+		//加载专业信息
+		$.ajax({
+	        url: "StudentControlServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+	        	flag:"select_major",
+	        	instid:instid
+	        },
+	        success: function (data) {
+	        	$(".major_content tr").remove();
+	        	 var str = "'确定要删除吗？'";
+	             $.each(data, function(index, item) {
+	            	 $(".major_content").append('<tr><td>'+(++index)+'.</td><td class="edit_majorid">'+item.majorid+'</td><td>'+item.instname+'</td><td class="edit_majorname">'+item.majorname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_major&majorid='+item.majorid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+	  	        });
+	         },
+	         error: function (jqXHR, textStatus, errorThrown) {
+	             alert(errorThrown);
+	         }
+	    });
+	}
+	
 }
 
 
 
 function add(){
-	//加载联级菜单
+	//加载下拉菜单
 	$.ajax({
         url: "SelectServlet",
         type: "POST",
         dataType:"JSON",
         data: {
-			select:3
+			select:0
         },
         success: function (data) {
         	$("#add_option_1 option").remove();
-        	$("#add_option_2 option").remove();
-        	$("#add_option_3 option").remove();
-        	$("#add_option_1").append("<option value='all'>全部</option>");
-            $.each(data.instList, function(index, item) {
+        	/* $("#add_option_1").append("<option value='all'>全部</option>"); */
+            $.each(data, function(index, item) {
 	            $("#add_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
-	        });
-            $.each(data.staffroomList, function(index, item) {
-	            $("#add_option_2").append(  
-	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
-	        });
-            $.each(data.typeList, function(index, item) {
-	            $("#add_option_3").append(  
-	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -274,53 +272,7 @@ function add(){
 	})
 }
 
-function add_changeStaffroom(val){
-	if(val == 'all'){
-		$.ajax({
-	        url: "SelectServlet",
-	        type: "POST",
-	        dataType:"JSON",
-	        data: {
-				select:3
-	        },
-	        success: function (data) {
-	        	$("#add_option_2 option").remove();
-	        	 $("#add_option_2").append(  
-			    			"<option select='select' value='all'>全部</option>");
-	            $.each(data.staffroomList, function(index, item) {
-		            $("#add_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
-		        });
-	        },
-	        error: function (jqXHR, textStatus, errorThrown) {
-	            alert(errorThrown);
-	        }
-
-	    });
-	}else{
-		$.ajax({
-	        url: "SelectServlet",
-	        type: "POST",
-	        dataType:"JSON",
-	        data: {
-				select:1,
-				instid:val
-	        },
-	        success: function (data) {
-	        	$("#add_option_2 option").remove();
-	            $.each(data, function(index, item) {
-		            $("#add_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
-		        });
-	        },
-	        error: function (jqXHR, textStatus, errorThrown) {
-	            alert(errorThrown);
-	        }//error
-	    });//ajax
-	}//else
-}
-
-
+/*
 function edit_changeStaffroom(val){
 	if(val == 'all'){
 		$.ajax({
@@ -365,7 +317,7 @@ function edit_changeStaffroom(val){
 	        }//error
 	    });//ajax
 	}//else
-}
+}*/
 </script>
 </head>
 <body>
@@ -449,7 +401,7 @@ function edit_changeStaffroom(val){
 							</div> -->
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
-								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
+								<button onclick="select_major()" type="submit" class="templatemo-blue-button">Update</button>
 								<button type="reset" class="templatemo-white-button"
 									onclick="add()" style="margin-left: 10px">Add</button>
 								<button type="reset" class="templatemo-white-button"
@@ -469,20 +421,17 @@ function edit_changeStaffroom(val){
 									<td><a href="" class="white-text templatemo-sort-by">#
 											<span class="caret"></span>
 									</a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程代码<span
+									<td><a href="" class="white-text templatemo-sort-by">专业代码<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程名称<span
+									<td><a href="" class="white-text templatemo-sort-by">所属学院<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课学院<span
+									<td><a href="" class="white-text templatemo-sort-by">专业名称<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课教研室<span
-											class="caret"></span></a></td>
-									<td>课程类别</td>
 									<td>Edit</td>
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody class="course_content">
+							<tbody class="major_content">
 
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
@@ -546,18 +495,17 @@ function edit_changeStaffroom(val){
 
 	<div class="add_tip">
 		<div>
-			<form action="CourseControlServlet" method="post">
+			<form action="StudentControlServlet" method="post">
 				<div class="add_con">
-					课程代码: <input name="courseid" value="" type="text" /><br>
-					开课学院: <select onchange="add_changeStaffroom(this.value)" id="add_option_1" name="instid"></select><br> 
-					开课教研室: <select id="add_option_2" name="staffroomid"></select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
-					课程类型: <select id="add_option_3" name="coursetypeid"></select><br>
+					专业代码: <input name="majorid" value="" type="text" /><br>
+					所属学院: <select id="add_option_1" name="instid"></select><br> 
+					专业名称: <input name="majorname" value="" type="text" /><br>
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add_course" />
+				<input type="hidden" name="flag" value="add_major" />
 			</form>
 		</div>
 	</div>
