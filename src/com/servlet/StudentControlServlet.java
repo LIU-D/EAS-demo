@@ -44,7 +44,30 @@ public class StudentControlServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		DBC DBC = new DBC();
+		String flag = request.getParameter("flag");
+		// 查看flag值
+		System.out.println("get flag: " + flag);
+		if (flag == null) {
+			System.err.println("flag无值！");
+		} else {
+			// 删除专业
+			if (flag.equals("delete_major")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from major where majorid= ?";
+					String[] param = { request.getParameter("majorid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Major.jsp");
 
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_major
+
+		} // else
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -212,6 +235,22 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // add_major
+
+			// 修改专业
+			if (flag.equals("update_major")) {
+				try {
+					DBC.getCon();
+					String sql = "update major set majorname = ?,instid=? where majorid=?";
+					String[] param = { request.getParameter("majorname"), request.getParameter("instid"),
+							request.getParameter("majorid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Major.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_major
 
 			// 选择显示专业信息
 			if (flag.equals("select_major")) {
