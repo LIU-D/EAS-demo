@@ -44,6 +44,7 @@ public class StudentControlServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -53,6 +54,7 @@ public class StudentControlServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		String flag = request.getParameter("flag");
 		DBC DBC = new DBC();
 		// 查看flag值
@@ -200,6 +202,8 @@ public class StudentControlServlet extends HttpServlet {
 					String sql = "insert into major(majorid,majorname,instid)values(?,?,?)";
 					String[] param = { request.getParameter("majorid"), request.getParameter("majorname"),
 							request.getParameter("instid") };
+
+					System.out.println(request.getParameter("majorname"));
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();
 					response.sendRedirect("Major.jsp");

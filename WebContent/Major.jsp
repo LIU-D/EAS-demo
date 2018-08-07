@@ -487,12 +487,6 @@ function edit_changeStaffroom(val){
 	</div>
 
 
-
-
-
-
-
-
 	<div class="add_tip">
 		<div>
 			<form action="StudentControlServlet" method="post">
