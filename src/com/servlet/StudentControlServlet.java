@@ -2,6 +2,7 @@ package com.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dao.DBC;
 import com.google.gson.Gson;
+import com.mod.Course;
 import com.mod.Student;
 import com.mysql.jdbc.Connection;
 
@@ -25,27 +27,31 @@ import com.mysql.jdbc.Connection;
 @WebServlet("/StudentControlServlet")
 public class StudentControlServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public StudentControlServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public StudentControlServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String flag = request.getParameter("flag");
 		DBC DBC = new DBC();
 		// 查看flag值
@@ -88,23 +94,71 @@ public class StudentControlServlet extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			}
-		}//else
+			}//loading_student
+
+			// 选择显示学生信息
+			if (flag.equals("select_student")) {
+				try {
+					int count = 1;
+					int flag_1=0,flag_2=0,flag_3=0;
+					List<Student> studentList = new ArrayList<Student>();
+					Connection con = (Connection) DBC.getCon();
+					ResultSet rs = null;
+					String sql = "select * from student,inst,major,classroom where "
+							+ "student.classid = classroom.classid and classroom.majorid = major.majorid and major.instid=inst.instid";
+					if (!request.getParameter("instid").equals("all")) {
+						sql += " and inst.instid = ?";
+						++flag_1;
+						++count;
+					}
+					if (!request.getParameter("majorid").equals("all")) {
+						sql += " and major.majorid = ?";
+						++flag_2;
+						++count;
+					}
+					if (!request.getParameter("classid").equals("all")) {
+						sql += " and classroom.classid = ?";
+						++flag_3;
+					}
+					System.out.println(sql);
+					if(count==1 && flag_3==0) {
+						Statement st = (Statement) con.createStatement();
+						rs = st.executeQuery(sql);
+					}else {
+						PreparedStatement ps = con.prepareStatement(sql);
+						if(flag_1!=0) ps.setString(flag_1,request.getParameter("instid"));
+						if(flag_2!=0) ps.setString(count-flag_2,request.getParameter("majorid"));
+						if(flag_3!=0) ps.setString(count,request.getParameter("classid"));
+						rs = ps.executeQuery();
+					}
+					while (rs.next()) {// 判断是否还有下一个数据
+						Student student = new Student();
+						student.setStudentid(rs.getString("studentid"));
+						student.setStudentname(rs.getString("studentname"));
+						student.setInstid(rs.getInt("instid"));
+						student.setInstname(rs.getString("instname"));
+						student.setMajorid(rs.getInt("majorid"));
+						student.setMajorname(rs.getString("majorname"));
+						student.setClassid(rs.getInt("classid"));
+						student.setClassname(rs.getString("classname"));
+						studentList.add(student);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(studentList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}//select_student
+
+		} // else
 	}
 
 }

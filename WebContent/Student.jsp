@@ -163,7 +163,6 @@ function changeMajor(val){
 function changeClassroom(val){
 	if(val == 'all'){
 		var instid = $("#loading_option_1 option:selected").val();
-		console.log(instid);
 		if(instid != 'all'){
 			//改变classroom
 		    $.ajax({
@@ -311,29 +310,29 @@ function edit_get(i,instid,staffroomid,coursetypeid){
 	})
 }
 
-function select_course(){
+function select_student(){
 	var instid = $("#loading_option_1 option:selected").val();
-	var staffroomid = $("#loading_option_2 option:selected").val();
-	var coursetypeid = $("#loading_option_3 option:selected").val();
+	var majorid = $("#loading_option_2 option:selected").val();
+	var classid = $("#loading_option_3 option:selected").val();
 	console.log(instid);
 	console.log(typeof instid);
-	//加载课程信息
+	//加载学生信息
 	$.ajax({
-        url: "CourseControlServlet",
+        url: "StudentControlServlet",
         type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"select_course",
+        	flag:"select_student",
         	instid:instid,
-        	staffroomid:staffroomid,
-        	coursetypeid:coursetypeid
+        	majorid:majorid,
+        	classid:classid
         },
         success: function (data) {
-        	$(".course_content tr").remove();
+        	$(".student_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
- 	        });
+              	$(".student_content").append('<tr><td>'+(++index)+'.</td><td class="edit_studentid">'+item.studentid+'</td><td class="edit_studentname">'+item.studentname+'</td><td>'+item.instname+'</td><td>'+item.majorname+'</td><td>'+item.classname+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.majorid+','+item.classid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_student&studentid='+item.studentid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
              alert(errorThrown);
