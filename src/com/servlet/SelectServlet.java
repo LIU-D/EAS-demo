@@ -270,6 +270,35 @@ public class SelectServlet extends HttpServlet {
 			}
 		}//select == changeClassroom
 		
+		if(select.equals("instid_changeClassroom")) {
+			try {
+				List<Classroom> classList = new ArrayList<Classroom>();
+				DBC.getCon();
+				String sql_2 = "select * from classroom,major where classroom.majorid=major.majorid and major.instid = ?";
+				String[] param = { request.getParameter("instid") };
+				ResultSet rs_2 = DBC.executeQuery(sql_2, param);
+				while (rs_2.next()) {// 判断是否还有下一个数据
+					Classroom classroom = new Classroom();
+					classroom.setClassid(rs_2.getInt("classid"));
+					classroom.setClassname(rs_2.getString("classname"));
+					classList.add(classroom);
+				}
+				Gson gson = new Gson();
+				String json_list = gson.toJson(classList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}//select == instid_changeClassroom
+		
+		
 		doGet(request, response);
 	}
 

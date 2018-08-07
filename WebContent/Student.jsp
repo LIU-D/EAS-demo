@@ -97,6 +97,13 @@ function changeMajor(val){
 		            $("#loading_option_2").append(  
 		    			"<option value="+item.majorid+">" + item.majorname+ "</option>");
 		        });
+	            $("#loading_option_3 option").remove();
+	        	 $("#loading_option_3").append(  
+			    			"<option select='select' value='all'>全部</option>");
+	            $.each(data.classList, function(index, item) {
+		            $("#loading_option_3").append(  
+		    			"<option value="+item.classid+">" + item.classname+ "</option>");
+		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
 	            alert(errorThrown);
@@ -104,6 +111,7 @@ function changeMajor(val){
 
 	    });
 	}else{
+		//改变major
 		$.ajax({
 	        url: "SelectServlet",
 	        type: "POST",
@@ -125,32 +133,84 @@ function changeMajor(val){
 	            alert(errorThrown);
 	        }//error
 	    });//ajax
-	}//else
-}
-
-function changeClassroom(val){
-	if(val == 'all'){
-		$.ajax({
+	    
+	    //改变classroom
+	    $.ajax({
 	        url: "SelectServlet",
 	        type: "POST",
 	        dataType:"JSON",
 	        data: {
-				select:3
+				select:"instid_changeClassroom",
+				instid:val
 	        },
 	        success: function (data) {
 	        	$("#loading_option_3 option").remove();
-	        	 $("#loading_option_3").append(  
-			    			"<option select='select' value='all'>全部</option>");
-	            $.each(data.classList, function(index, item) {
+	        	$("#loading_option_3").append(  
+    			"<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
 		            $("#loading_option_3").append(  
 		    			"<option value="+item.classid+">" + item.classname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
 	            alert(errorThrown);
-	        }
+	        }//error
+	    });//ajax
+	    
+	}//else
+}
 
-	    });
+function changeClassroom(val){
+	if(val == 'all'){
+		var instid = $("#loading_option_1 option:selected").val();
+		console.log(instid);
+		if(instid != 'all'){
+			//改变classroom
+		    $.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:"instid_changeClassroom",
+					instid:instid
+		        },
+		        success: function (data) {
+		        	$("#loading_option_3 option").remove();
+		        	$("#loading_option_3").append(  
+	    			"<option select='select' value='all'>全部</option>");
+		            $.each(data, function(index, item) {
+			            $("#loading_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }//error
+		    });//ajax
+		}else{
+			$.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:3
+		        },
+		        success: function (data) {
+		        	$("#loading_option_3 option").remove();
+		        	 $("#loading_option_3").append(  
+				    			"<option select='select' value='all'>全部</option>");
+		            $.each(data.classList, function(index, item) {
+			            $("#loading_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }
+
+		    });
+		}
+		
 	}else{
 		$.ajax({
 	        url: "SelectServlet",
