@@ -56,7 +56,6 @@ $(document).ready(function(){
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
         }
-
     });
 	
 	//加载学生信息
@@ -352,28 +351,24 @@ function add(){
 			select:3
         },
         success: function (data) {
-        	$("#add_option_1 option").remove();
-        	$("#add_option_2 option").remove();
-        	$("#add_option_3 option").remove();
-        	$("#add_option_1").append("<option value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
 	            $("#add_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
 	        });
-            $.each(data.staffroomList, function(index, item) {
+            $.each(data.majorList, function(index, item) {
 	            $("#add_option_2").append(  
-	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	    			"<option value="+item.majorid+">" + item.majorname+ "</option>");
 	        });
-            $.each(data.typeList, function(index, item) {
+            $.each(data.classList, function(index, item) {
 	            $("#add_option_3").append(  
-	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
+	    			"<option value="+item.classid+">" + item.classname+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
         }
-
     });
+	
 	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".add_close").click(function(){
 		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -426,6 +421,80 @@ function add_changeMajor(val){
 	}//else
 }
 
+function add_changeClassroom(val){
+	if(val == 'all'){
+		var instid = $("#add_option_1 option:selected").val();
+		if(instid != 'all'){
+			//改变classroom
+		    $.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:"instid_changeClassroom",
+					instid:instid
+		        },
+		        success: function (data) {
+		        	$("#add_option_3 option").remove();
+		        	$("#add_option_3").append(  
+	    			"<option select='select' value='all'>全部</option>");
+		            $.each(data, function(index, item) {
+			            $("#add_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }//error
+		    });//ajax
+		}else{
+			$.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:3
+		        },
+		        success: function (data) {
+		        	$("#add_option_3 option").remove();
+		        	 $("#add_option_3").append(  
+				    			"<option select='select' value='all'>全部</option>");
+		            $.each(data.classList, function(index, item) {
+			            $("#add_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }
+
+		    });
+		}
+		
+	}else{
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:"changeClassroom",
+				majorid:val
+	        },
+	        success: function (data) {
+	        	$("#add_option_3 option").remove();
+	        	$("#add_option_3").append(  
+    			"<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#add_option_3").append(  
+		    			"<option value="+item.classid+">" + item.classname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	}//else
+}
 
 function edit_changeStaffroom(val){
 	if(val == 'all'){
@@ -651,18 +720,19 @@ function edit_changeStaffroom(val){
 
 	<div class="add_tip">
 		<div>
-			<form action="CourseControlServlet" method="post">
+			<form action="StudentControlServlet" method="post">
 				<div class="add_con">
-					课程代码: <input name="courseid" value="" type="text" /><br>
-					开课学院: <select onchange="add_changeStaffroom(this.value)" id="add_option_1" name="instid"></select><br> 
-					开课教研室: <select id="add_option_2" name="staffroomid"></select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
-					课程类型: <select id="add_option_3" name="coursetypeid"></select><br>
+					学号: <input name="studentid" value="" type="text" /><br>
+					姓名: <input name="studentname" value="" type="text" /><br>
+					所属学院: <select onchange="add_changeMajor(this.value)" id="add_option_1" name="instid"></select><br> 
+					所属专业: <select onchange="add_changeClassroom(this.value)" id="add_option_2" name="majorid"></select><br>
+					所属班级: <select id="add_option_3" name="classid"></select><br>
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add_course" />
+				<input type="hidden" name="flag" value="add_Student" />
 			</form>
 		</div>
 	</div>
