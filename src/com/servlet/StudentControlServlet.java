@@ -188,6 +188,22 @@ public class StudentControlServlet extends HttpServlet {
 				}
 			} // select_student
 
+			// 增加班级
+			if (flag.equals("add_classroom")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into classroom(classid,classname,year,majorid)values(?,?,?,?)";
+					String[] param = { request.getParameter("classid"), request.getParameter("classname"),
+							request.getParameter("year"),request.getParameter("majorid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Class.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // add_classroom
+
 			// 加载班级信息
 			if (flag.equals("loading_classroom")) {
 				try {
