@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dao.DBC;
 import com.google.gson.Gson;
+import com.mod.Classroom;
 import com.mod.Course;
 import com.mod.Major;
 import com.mod.Student;
@@ -186,6 +187,40 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // select_student
+
+			// 加载班级信息
+			if (flag.equals("loading_classroom")) {
+				try {
+					List<Classroom> classroomList = new ArrayList<Classroom>();
+					Connection con = (Connection) DBC.getCon();
+					String sql = "select * from inst,major,classroom where classroom.majorid=major.majorid and major.instid=inst.instid";
+					Statement st = (Statement) con.createStatement();
+					ResultSet rs = st.executeQuery(sql);
+					while (rs.next()) {// 判断是否还有下一个数据
+						Classroom classroom = new Classroom();
+						classroom.setInstid(rs.getInt("instid"));
+						classroom.setInstname(rs.getString("instname"));
+						classroom.setClassid(rs.getInt("classid"));
+						classroom.setClassname(rs.getString("classname"));
+						classroom.setMajorid(rs.getInt("majorid"));
+						classroom.setYear(rs.getInt("year"));
+						classroom.setMajorname(rs.getString("majorname"));
+						classroomList.add(classroom);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(classroomList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // loading_classroom
 
 			// 加载专业信息
 			if (flag.equals("loading_major")) {

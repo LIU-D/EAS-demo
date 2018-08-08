@@ -85,77 +85,7 @@ public class SelectServlet extends HttpServlet {
 			
 		}
 		
-		if(select.equals("3")) {
-			List<Inst> instList = new ArrayList<Inst>();
-			List<Staffroom> staffroomList = new ArrayList<Staffroom>();
-			List<CourseType> typeList = new ArrayList<CourseType>();
-			List<Major> majorList = new ArrayList<Major>();
-			List<Classroom> classList = new ArrayList<Classroom>();
-			try {
-				Connection con = (Connection) DBC.getCon();
-				String sql_1 = "select * from inst";
-				Statement st_1 = (Statement) con.createStatement();
-				ResultSet rs_1 = st_1.executeQuery(sql_1);
-				while (rs_1.next()) {// 判断是否还有下一个数据
-					Inst inst = new Inst();
-					inst.setInstid(rs_1.getInt("instid"));
-					inst.setInstname(rs_1.getString("instname"));
-					instList.add(inst);
-				}
-				
-				String sql_2 = "select * from staffroom";
-				ResultSet rs_2 = st_1.executeQuery(sql_2);
-				while (rs_2.next()) {// 判断是否还有下一个数据
-					Staffroom staffroom = new Staffroom();
-					staffroom.setStaffroomid(rs_2.getInt("staffroomid"));
-					staffroom.setStaffroomname(rs_2.getString("staffroomname"));
-					staffroomList.add(staffroom);
-				}
-				
-				String sql_3= "select * from coursetype";
-				ResultSet rs_3 = st_1.executeQuery(sql_3);
-				while (rs_3.next()) {// 判断是否还有下一个数据
-					CourseType c = new CourseType();
-					c.setCoursetypeid(rs_3.getInt("coursetypeid"));
-					c.setCoursetype(rs_3.getString("coursetype"));
-					typeList.add(c);
-				}
-				
-				String sql_4= "select * from major";
-				ResultSet rs_4 = st_1.executeQuery(sql_4);
-				while (rs_4.next()) {// 判断是否还有下一个数据
-					Major m = new Major();
-					m.setMajorid(rs_4.getInt("majorid"));
-					m.setMajorname(rs_4.getString("majorname"));
-					majorList.add(m);
-				}
-				
-				String sql_5= "select * from classroom";
-				ResultSet rs_5 = st_1.executeQuery(sql_5);
-				while (rs_5.next()) {// 判断是否还有下一个数据
-					Classroom c = new Classroom();
-					c.setClassid(rs_5.getInt("classid"));
-					c.setClassname(rs_5.getString("classname"));
-					classList.add(c);
-				}
-				JsonSelect jsonSelect = new JsonSelect(instList,staffroomList,typeList,majorList,classList);
-				
-				Gson gson = new Gson();
-				String json_list = gson.toJson(jsonSelect);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
-				response.setContentType("application/json;charset=utf-8");
-				PrintWriter out = response.getWriter();
-			    out.print(json_list);
-			    out.flush();
-				out.close();
-				DBC.closeAll();
-				
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
+		
 		if(select.equals("1")) {
 			try {
 				List<Staffroom> staffroomList = new ArrayList<Staffroom>();
@@ -212,6 +142,78 @@ public class SelectServlet extends HttpServlet {
 			}
 		}//select == 2
 		
+		if(select.equals("3")) {
+			List<Inst> instList = new ArrayList<Inst>();
+			List<Staffroom> staffroomList = new ArrayList<Staffroom>();
+			List<CourseType> typeList = new ArrayList<CourseType>();
+			List<Major> majorList = new ArrayList<Major>();
+			List<Classroom> classList = new ArrayList<Classroom>();
+			try {
+				Connection con = (Connection) DBC.getCon();
+				String sql_1 = "select * from inst";
+				Statement st_1 = (Statement) con.createStatement();
+				ResultSet rs_1 = st_1.executeQuery(sql_1);
+				while (rs_1.next()) {// 判断是否还有下一个数据
+					Inst inst = new Inst();
+					inst.setInstid(rs_1.getInt("instid"));
+					inst.setInstname(rs_1.getString("instname"));
+					instList.add(inst);
+				}
+				
+				String sql_2 = "select * from staffroom";
+				ResultSet rs_2 = st_1.executeQuery(sql_2);
+				while (rs_2.next()) {// 判断是否还有下一个数据
+					Staffroom staffroom = new Staffroom();
+					staffroom.setStaffroomid(rs_2.getInt("staffroomid"));
+					staffroom.setStaffroomname(rs_2.getString("staffroomname"));
+					staffroomList.add(staffroom);
+				}
+				
+				String sql_3= "select * from coursetype";
+				ResultSet rs_3 = st_1.executeQuery(sql_3);
+				while (rs_3.next()) {// 判断是否还有下一个数据
+					CourseType c = new CourseType();
+					c.setCoursetypeid(rs_3.getInt("coursetypeid"));
+					c.setCoursetype(rs_3.getString("coursetype"));
+					typeList.add(c);
+				}
+				
+				String sql_4= "select * from major";
+				ResultSet rs_4 = st_1.executeQuery(sql_4);
+				while (rs_4.next()) {// 判断是否还有下一个数据
+					Major m = new Major();
+					m.setMajorid(rs_4.getInt("majorid"));
+					m.setMajorname(rs_4.getString("majorname"));
+					majorList.add(m);
+				}
+				
+				String sql_5= "select * from classroom";
+				ResultSet rs_5 = st_1.executeQuery(sql_5);
+				while (rs_5.next()) {// 判断是否还有下一个数据
+					Classroom c = new Classroom();
+					c.setClassid(rs_5.getInt("classid"));
+					c.setYear(rs_5.getInt("year"));
+					c.setClassname(rs_5.getString("classname"));
+					classList.add(c);
+				}
+				JsonSelect jsonSelect = new JsonSelect(instList,staffroomList,typeList,majorList,classList);
+				
+				Gson gson = new Gson();
+				String json_list = gson.toJson(jsonSelect);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				PrintWriter out = response.getWriter();
+			    out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+				
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
 		if(select.equals("changeMajor")) {
 			try {
@@ -298,6 +300,34 @@ public class SelectServlet extends HttpServlet {
 			}
 		}//select == instid_changeClassroom
 		
+		//加载年级
+		if(select.equals("classroom_loadingyear")) {
+			List<Classroom> classList = new ArrayList<Classroom>();
+			try {
+				Connection con = (Connection) DBC.getCon();
+				String sql_1 = "select distinct year from classroom order by year";
+				Statement st_1 = (Statement) con.createStatement();
+				ResultSet rs_1 = st_1.executeQuery(sql_1);
+				while (rs_1.next()) {// 判断是否还有下一个数据
+					Classroom classroom = new Classroom();
+					classroom.setYear(rs_1.getInt("year"));
+					classList.add(classroom);
+				}
+				Gson gson = new Gson();
+				String json_list = gson.toJson(classList);
+				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setContentType("application/json;charset=utf-8");
+				PrintWriter out = response.getWriter();
+			    out.print(json_list);
+			    out.flush();
+				out.close();
+				DBC.closeAll();
+				
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}//classroom_loadingyear
 		
 		doGet(request, response);
 	}
