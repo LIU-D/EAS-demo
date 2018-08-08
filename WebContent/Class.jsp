@@ -219,30 +219,28 @@ function edit_get(i,instid,staffroomid,coursetypeid){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
-
-function select_course(){
+//选择班级信息
+function select_classroom(){
 	var instid = $("#loading_option_1 option:selected").val();
-	var staffroomid = $("#loading_option_2 option:selected").val();
-	var coursetypeid = $("#loading_option_3 option:selected").val();
-	console.log(instid);
-	console.log(typeof instid);
-	//加载课程信息
+	var year = $("#loading_option_2 option:selected").val();
+	var majorid = $("#loading_option_3 option:selected").val();
+	//加载班级信息
 	$.ajax({
-        url: "CourseControlServlet",
+        url: "StudentControlServlet",
         type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"select_course",
+        	flag:"select_classroom",
         	instid:instid,
-        	staffroomid:staffroomid,
-        	coursetypeid:coursetypeid
+        	majorid:majorid,
+        	year:year
         },
         success: function (data) {
-        	$(".course_content tr").remove();
+        	$(".classroom_content tr").remove();
         	 var str = "'确定要删除吗？'";
-             $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
- 	        });
+        	 $.each(data, function(index, item) {
+              	$(".classroom_content").append('<tr><td>'+(++index)+'.</td><td class="edit_classroomid">'+item.classid+'</td><td>'+item.instname+'</td><td>'+item.majorname+'</td><td>'+item.year+'</td><td class="edit_classroomname">'+item.classname+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.majorid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_classroom&classroomid='+item.classid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
              alert(errorThrown);
@@ -465,7 +463,7 @@ function edit_changeStaffroom(val){
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
-								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
+								<button onclick="select_classroom()" type="submit" class="templatemo-blue-button">Update</button>
 								<button type="reset" class="templatemo-white-button"
 									onclick="add()" style="margin-left: 10px">Add</button>
 								<button type="reset" class="templatemo-white-button"

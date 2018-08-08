@@ -222,6 +222,69 @@ public class StudentControlServlet extends HttpServlet {
 				}
 			} // loading_classroom
 
+			// 选择显示班级信息
+			if (flag.equals("select_classroom")) {
+				try {
+					int count = 1;
+					int flag_1 = 0, flag_2 = 0, flag_3 = 0;
+					List<Classroom> classroomList = new ArrayList<Classroom>();
+					Connection con = (Connection) DBC.getCon();
+					ResultSet rs = null;
+					String sql = "select * from inst,major,classroom where classroom.majorid=major.majorid and major.instid=inst.instid";
+					if (!request.getParameter("instid").equals("all")) {
+						sql += " and inst.instid = ?";
+						++flag_1;
+						++count;
+					}
+					if (!request.getParameter("majorid").equals("all")) {
+						sql += " and major.majorid = ?";
+						++flag_2;
+						++count;
+					}
+					if (!request.getParameter("year").equals("all")) {
+						sql += " and classroom.year = ?";
+						++flag_3;
+					}
+					System.out.println(sql);
+					if (count == 1 && flag_3 == 0) {
+						Statement st = (Statement) con.createStatement();
+						rs = st.executeQuery(sql);
+					} else {
+						PreparedStatement ps = con.prepareStatement(sql);
+						if (flag_1 != 0)
+							ps.setString(flag_1, request.getParameter("instid"));
+						if (flag_2 != 0)
+							ps.setString(count - flag_2, request.getParameter("majorid"));
+						if (flag_3 != 0)
+							ps.setString(count, request.getParameter("year"));
+						rs = ps.executeQuery();
+					}
+					while (rs.next()) {// 判断是否还有下一个数据
+						Classroom classroom = new Classroom();
+						classroom.setInstid(rs.getInt("instid"));
+						classroom.setInstname(rs.getString("instname"));
+						classroom.setClassid(rs.getInt("classid"));
+						classroom.setClassname(rs.getString("classname"));
+						classroom.setMajorid(rs.getInt("majorid"));
+						classroom.setYear(rs.getInt("year"));
+						classroom.setMajorname(rs.getString("majorname"));
+						classroomList.add(classroom);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(classroomList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // select_classroom
+
 			// 加载专业信息
 			if (flag.equals("loading_major")) {
 				try {
