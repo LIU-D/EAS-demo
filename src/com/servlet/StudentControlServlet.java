@@ -52,6 +52,23 @@ public class StudentControlServlet extends HttpServlet {
 		if (flag == null) {
 			System.err.println("flag无值！");
 		} else {
+
+			// 删除班级
+			if (flag.equals("delete_classroom")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from classroom where classid= ?";
+					String[] param = { request.getParameter("classid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Class.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_classroom
+
 			// 删除专业
 			if (flag.equals("delete_major")) {
 				try {
@@ -194,7 +211,7 @@ public class StudentControlServlet extends HttpServlet {
 					DBC.getCon();
 					String sql = "insert into classroom(classid,classname,year,majorid)values(?,?,?,?)";
 					String[] param = { request.getParameter("classid"), request.getParameter("classname"),
-							request.getParameter("year"),request.getParameter("majorid") };
+							request.getParameter("year"), request.getParameter("majorid") };
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();
 					response.sendRedirect("Class.jsp");
@@ -300,6 +317,22 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // select_classroom
+
+			// 修改班级信息
+			if (flag.equals("update_classroom")) {
+				try {
+					DBC.getCon();
+					String sql = "update classroom set classname = ?,majorid=?,year=? where classid=?";
+					String[] param = { request.getParameter("classname"), request.getParameter("majorid"),
+							request.getParameter("year"), request.getParameter("classid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Class.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_classroom
 
 			// 加载专业信息
 			if (flag.equals("loading_major")) {
