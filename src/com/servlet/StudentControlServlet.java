@@ -53,6 +53,22 @@ public class StudentControlServlet extends HttpServlet {
 			System.err.println("flag无值！");
 		} else {
 
+			// 删除学生信息
+			if (flag.equals("delete_student")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from student where studentid= ?";
+					String[] param = { request.getParameter("studentid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Student.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_studentid
+
 			// 删除班级
 			if (flag.equals("delete_classroom")) {
 				try {
@@ -104,6 +120,38 @@ public class StudentControlServlet extends HttpServlet {
 			System.err.println("flag无值！");
 		} // if(!null)
 		else {
+			// 增加学生信息
+			if (flag.equals("add_student")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into student(studentid,studentname,classid)values(?,?,?)";
+					String[] param = { request.getParameter("studentid"), request.getParameter("studentname"),
+							request.getParameter("classid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Student.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // add_student
+
+			// 修改学生信息
+			if (flag.equals("update_student")) {
+				try {
+					DBC.getCon();
+					String sql = "update student set studentname = ?,classid=? where studentid=?";
+					String[] param = { request.getParameter("studentname"), request.getParameter("classid"),
+							request.getParameter("studentid")};
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Student.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_student
+
 			// 加载学生信息
 			if (flag.equals("loading_student")) {
 				try {

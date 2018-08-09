@@ -220,8 +220,7 @@ function changeClassroom(val){
 	        },
 	        success: function (data) {
 	        	$("#loading_option_3 option").remove();
-	        	$("#loading_option_3").append(  
-    			"<option select='select' value='all'>全部</option>");
+	        	$("#loading_option_3").append("<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#loading_option_3").append(  
 		    			"<option value="+item.classid+">" + item.classname+ "</option>");
@@ -234,7 +233,7 @@ function changeClassroom(val){
 	}//else
 }
 
-function edit_get(i,instid,staffroomid,coursetypeid){
+function edit_get(i,instid,majorid,classid){
 	//加载联级菜单
 	$.ajax({
         url: "SelectServlet",
@@ -246,7 +245,7 @@ function edit_get(i,instid,staffroomid,coursetypeid){
         },
         success: function (data) {
             $("#edit_option_1 option").remove();
-            $("#edit_option_3 option").remove();
+            $("#edit_option_1").append("<option value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
             	if(item.instid == instid){
             		$("#edit_option_1").append(
@@ -256,14 +255,6 @@ function edit_get(i,instid,staffroomid,coursetypeid){
          	    	"<option value="+item.instid+">" + item.instname+ "</option>");
             	}
 	        });
-            $.each(data.typeList, function(index, item) {
-            	if(item.coursetypeid == coursetypeid){
-            		 $("#edit_option_3").append("<option class='slt' value="+item.coursetypeid+">" + item.coursetype+ "</option>");
-            	}else{
-            		 $("#edit_option_3").append("<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
-            	}
-	        });
-            
             $(".slt").attr("selected",true);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -276,33 +267,59 @@ function edit_get(i,instid,staffroomid,coursetypeid){
         type: "POST",
         dataType:"JSON",
         data: {
-			select:1,
+			select:"changeMajor",
 			instid:instid,
 			date:new Date()
         },
         success: function (data) {
             $("#edit_option_2 option").remove();
+            $("#edit_option_2").append("<option value='all'>全部</option>");
             $.each(data, function(index, item) {
-            	if(item.staffroomid == staffroomid){
+            	if(item.majorid == majorid){
             		$("#edit_option_2").append(
-                 	    	"<option class='slt' value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+                 	    	"<option class='slt' value="+item.majorid+">" + item.majorname+ "</option>");
             	}else{
             	$("#edit_option_2").append(
-         	    	"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+         	    	"<option value="+item.majorid+">" + item.majorname+ "</option>");
             	}
 	        });
-            
             $(".slt").attr("selected",true);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
         }
-
     });
 	
-	var a = $(".edit_courseid").eq(i - 1).text();
-	$(".upd_con input")[0].value = $(".edit_courseid").eq(i - 1).text();
-	$(".upd_con input")[1].value = $(".edit_coursename").eq(i - 1).text();
+	$.ajax({
+        url: "SelectServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+			select:"changeClassroom",
+			majorid:majorid,
+			date:new Date()
+        },
+        success: function (data) {
+            $("#edit_option_3 option").remove();
+            $("#edit_option_3").append("<option value='all'>全部</option>");
+            $.each(data, function(index, item) {
+            	if(item.classid == classid){
+            		$("#edit_option_3").append(
+                 	    	"<option class='slt' value="+item.classid+">" + item.classname+ "</option>");
+            	}else{
+            	$("#edit_option_3").append(
+         	    	"<option value="+item.classid+">" + item.classname+ "</option>");
+            	}
+	        });
+            $(".slt").attr("selected",true);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+	
+	$(".upd_con input")[0].value = $(".edit_studentid").eq(i - 1).text();
+	$(".upd_con input")[1].value = $(".edit_studentname").eq(i - 1).text();
 	$(".upd_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".upd_close").click(function(){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -351,6 +368,9 @@ function add(){
 			select:3
         },
         success: function (data) {
+        	$("#add_option_1").append("<option select='select' value='all'>全部</option>");
+        	$("#add_option_2").append("<option select='select' value='all'>全部</option>");
+        	$("#add_option_3").append("<option select='select' value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
 	            $("#add_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
@@ -386,11 +406,14 @@ function add_changeMajor(val){
 	        },
 	        success: function (data) {
 	        	$("#add_option_2 option").remove();
-	        	 $("#add_option_2").append(  
-			    			"<option select='select' value='all'>全部</option>");
-	            $.each(data.staffroomList, function(index, item) {
-		            $("#add_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	        	$("#add_option_3 option").remove();
+	        	$("#add_option_2").append("<option select='select' value='all'>全部</option>");
+	        	$("#add_option_3").append("<option select='select' value='all'>全部</option>");
+	            $.each(data.majorList, function(index, item) {
+		            $("#add_option_2").append("<option value="+item.majorid+">" + item.majorname+ "</option>");
+		        });
+	            $.each(data.classList, function(index, item) {
+		            $("#add_option_3").append("<option value="+item.classid+">" + item.classname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
@@ -404,22 +427,47 @@ function add_changeMajor(val){
 	        type: "POST",
 	        dataType:"JSON",
 	        data: {
-				select:1,
+				select:"changeMajor",
 				instid:val
 	        },
 	        success: function (data) {
 	        	$("#add_option_2 option").remove();
+	        	$("#add_option_2").append("<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#add_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		            	"<option value="+item.majorid+">" + item.majorname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
 	            alert(errorThrown);
 	        }//error
 	    });//ajax
+	    
+	    
+	    $.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:"instid_changeClassroom",
+				instid:val
+	        },
+	        success: function (data) {
+	        	$("#add_option_3 option").remove();
+	        	$("#add_option_3").append("<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#add_option_3").append(  
+		            	"<option value="+item.classid+">" + item.classname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	    
 	}//else
 }
+
 
 function add_changeClassroom(val){
 	if(val == 'all'){
@@ -496,7 +544,7 @@ function add_changeClassroom(val){
 	}//else
 }
 
-function edit_changeStaffroom(val){
+function edit_changeMajor(val){
 	if(val == 'all'){
 		$.ajax({
 	        url: "SelectServlet",
@@ -507,11 +555,14 @@ function edit_changeStaffroom(val){
 	        },
 	        success: function (data) {
 	        	$("#edit_option_2 option").remove();
-	        	 $("#edit_option_2").append(  
-			    			"<option select='select' value='all'>全部</option>");
-	            $.each(data.staffroomList, function(index, item) {
-		            $("#edit_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+	        	$("#edit_option_3 option").remove();
+	        	$("#edit_option_2").append("<option select='select' value='all'>全部</option>");
+	        	$("#edit_option_3").append("<option select='select' value='all'>全部</option>");
+	            $.each(data.majorList, function(index, item) {
+		            $("#edit_option_2").append("<option value="+item.majorid+">" + item.majorname+ "</option>");
+		        });
+	            $.each(data.classList, function(index, item) {
+		            $("#edit_option_3").append("<option value="+item.classid+">" + item.classname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
@@ -525,14 +576,113 @@ function edit_changeStaffroom(val){
 	        type: "POST",
 	        dataType:"JSON",
 	        data: {
-				select:1,
+				select:"changeMajor",
 				instid:val
 	        },
 	        success: function (data) {
 	        	$("#edit_option_2 option").remove();
+	        	$("#edit_option_2").append("<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#edit_option_2").append(  
-		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
+		            	"<option value="+item.majorid+">" + item.majorname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	    
+	    
+	    $.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:"instid_changeClassroom",
+				instid:val
+	        },
+	        success: function (data) {
+	        	$("#edit_option_3 option").remove();
+	        	$("#edit_option_3").append("<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#edit_option_3").append(  
+		            	"<option value="+item.classid+">" + item.classname+ "</option>");
+		        });
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            alert(errorThrown);
+	        }//error
+	    });//ajax
+	    
+	}//else
+}
+
+function edit_changeClassroom(val){
+	if(val == 'all'){
+		var instid = $("#edit_option_1 option:selected").val();
+		if(instid != 'all'){
+			//改变classroom
+		    $.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:"instid_changeClassroom",
+					instid:instid
+		        },
+		        success: function (data) {
+		        	$("#edit_option_3 option").remove();
+		        	$("#edit_option_3").append(  
+	    			"<option select='select' value='all'>全部</option>");
+		            $.each(data, function(index, item) {
+			            $("#edit_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }//error
+		    });//ajax
+		}else{
+			$.ajax({
+		        url: "SelectServlet",
+		        type: "POST",
+		        dataType:"JSON",
+		        data: {
+					select:3
+		        },
+		        success: function (data) {
+		        	$("#edit_option_3 option").remove();
+		        	 $("#edit_option_3").append(  
+				    			"<option select='select' value='all'>全部</option>");
+		            $.each(data.classList, function(index, item) {
+			            $("#edit_option_3").append(  
+			    			"<option value="+item.classid+">" + item.classname+ "</option>");
+			        });
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(errorThrown);
+		        }
+
+		    });
+		}
+		
+	}else{
+		$.ajax({
+	        url: "SelectServlet",
+	        type: "POST",
+	        dataType:"JSON",
+	        data: {
+				select:"changeClassroom",
+				majorid:val
+	        },
+	        success: function (data) {
+	        	$("#edit_option_3 option").remove();
+	        	$("#edit_option_3").append(  
+    			"<option select='select' value='all'>全部</option>");
+	            $.each(data, function(index, item) {
+		            $("#edit_option_3").append(  
+		    			"<option value="+item.classid+">" + item.classname+ "</option>");
 		        });
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
@@ -663,11 +813,11 @@ function edit_changeStaffroom(val){
 									<div>
 										<form action="StudentControlServlet" method="post">
 											<div class="upd_con">
-												学号: <input readonly="true" name="courseid" value="" type="text" /><br>
-												姓名: <input name="courseid" value="" type="text" /><br>
-												所属学院: <select onchange="edit_changeStaffroom(this.value)" id="edit_option_1" name="instid"></select><br> 
-												所属专业: <select id="edit_option_2" name="staffroomid"></select><br>
-												所属班级: <select id="edit_option_3" name="coursetypeid"></select>
+												学号: <input readonly="true" name="studentid" value="" type="text" /><br>
+												姓名: <input name="studentname" value="" type="text" /><br>
+												所属学院: <select onchange="edit_changeMajor(this.value)" id="edit_option_1" name="instid"></select><br> 
+												所属专业: <select onchange="edit_changeClassroom(this.value)" id="edit_option_2" name="majorid"></select><br>
+												所属班级: <select id="edit_option_3" name="classid"></select>
 											</div>
 
 											<div class="upd_updbtn">
@@ -675,7 +825,7 @@ function edit_changeStaffroom(val){
 													type="button" value="取消" />
 											</div>
 											<input type="hidden" name="courseid" value="" /> <input
-												type="hidden" name="flag" value="update_course" />
+												type="hidden" name="flag" value="update_student" />
 										</form>
 									</div>
 								</div>
@@ -732,7 +882,7 @@ function edit_changeStaffroom(val){
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add_Student" />
+				<input type="hidden" name="flag" value="add_student" />
 			</form>
 		</div>
 	</div>
