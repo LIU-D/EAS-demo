@@ -21,6 +21,7 @@ import com.mod.Classroom;
 import com.mod.Course;
 import com.mod.Major;
 import com.mod.Student;
+import com.mod.Teacher;
 import com.mysql.jdbc.Connection;
 
 /**
@@ -52,6 +53,22 @@ public class StudentControlServlet extends HttpServlet {
 		if (flag == null) {
 			System.err.println("flag无值！");
 		} else {
+
+			// 删除教师信息
+			if (flag.equals("delete_teacher")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from teacher where teacherid= ?";
+					String[] param = { request.getParameter("teacherid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Teacher.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_teacherid
 
 			// 删除学生信息
 			if (flag.equals("delete_student")) {
@@ -120,6 +137,128 @@ public class StudentControlServlet extends HttpServlet {
 			System.err.println("flag无值！");
 		} // if(!null)
 		else {
+			// 增加教师信息
+			if (flag.equals("add_teacher")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into teacher(teacherid,teachername,staffroomid)values(?,?,?)";
+					String[] param = { request.getParameter("teacherid"), request.getParameter("teachername"),
+							request.getParameter("staffroomid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Teacher.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // add_teacher
+
+			// 修改教师信息
+			if (flag.equals("update_teacher")) {
+				try {
+					DBC.getCon();
+					String sql = "update teacher set teachername = ?,staffroomid=? where teacherid=?";
+					String[] param = { request.getParameter("teachername"), request.getParameter("staffroomid"),
+							request.getParameter("teacherid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Teacher.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_teacher
+
+			// 加载教師信息
+			if (flag.equals("loading_teacher")) {
+				try {
+					List<Teacher> teacherList = new ArrayList<Teacher>();
+					Connection con = (Connection) DBC.getCon();
+					String sql = "select * from teacher,inst,staffroom where teacher.staffroomid = staffroom.staffroomid and staffroom.instid=inst.instid";
+					Statement st = (Statement) con.createStatement();
+					ResultSet rs = st.executeQuery(sql);
+					while (rs.next()) {// 判断是否还有下一个数据
+						Teacher teacher = new Teacher();
+						teacher.setTeacherid(rs.getInt("teacherid"));
+						teacher.setTeachername(rs.getString("teachername"));
+						teacher.setInstid(rs.getInt("instid"));
+						teacher.setInstname(rs.getString("instname"));
+						teacher.setStaffroomid(rs.getInt("staffroomid"));
+						teacher.setStaffroomname(rs.getString("staffroomname"));
+						teacherList.add(teacher);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(teacherList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // loading_teacher
+
+			// 选择显示教师信息
+			if (flag.equals("select_teacher")) {
+				try {
+					int count = 1;
+					int flag_1 = 0, flag_2 = 0;
+					List<Teacher> teacherList = new ArrayList<Teacher>();
+					Connection con = (Connection) DBC.getCon();
+					ResultSet rs = null;
+					String sql = "select * from teacher,inst,staffroom where "
+							+ "teacher.staffroomid = staffroom.staffroomid and staffroom.instid=inst.instid";
+					if (!request.getParameter("instid").equals("all")) {
+						sql += " and inst.instid = ?";
+						++flag_1;
+						++count;
+					}
+					if (!request.getParameter("staffroomid").equals("all")) {
+						sql += " and staffroom.staffroomid = ?";
+						++flag_2;
+						++count;
+					}
+					if (count == 1) {
+						Statement st = (Statement) con.createStatement();
+						rs = st.executeQuery(sql);
+					} else {
+						PreparedStatement ps = con.prepareStatement(sql);
+						if (flag_1 != 0)
+							ps.setString(flag_1, request.getParameter("instid"));
+						if (flag_2 != 0)
+							ps.setString(count - flag_2, request.getParameter("staffroomid"));
+						rs = ps.executeQuery();
+					}
+					while (rs.next()) {// 判断是否还有下一个数据
+						Teacher teacher = new Teacher();
+						teacher.setTeacherid(rs.getInt("teacherid"));
+						teacher.setTeachername(rs.getString("teachername"));
+						teacher.setInstid(rs.getInt("instid"));
+						teacher.setInstname(rs.getString("instname"));
+						teacher.setStaffroomid(rs.getInt("staffroomid"));
+						teacher.setStaffroomname(rs.getString("staffroomname"));
+						teacherList.add(teacher);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(teacherList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // select_teacher
+
 			// 增加学生信息
 			if (flag.equals("add_student")) {
 				try {
@@ -142,7 +281,7 @@ public class StudentControlServlet extends HttpServlet {
 					DBC.getCon();
 					String sql = "update student set studentname = ?,classid=? where studentid=?";
 					String[] param = { request.getParameter("studentname"), request.getParameter("classid"),
-							request.getParameter("studentid")};
+							request.getParameter("studentid") };
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();
 					response.sendRedirect("Student.jsp");
