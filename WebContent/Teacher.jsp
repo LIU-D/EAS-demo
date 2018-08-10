@@ -379,9 +379,9 @@ function edit_changeStaffroom(val){
 			<ul>
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
 				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
-				<li><a href="Teacher.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
+				<li><a href="Teacher.jsp" class="active"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="Student.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
-				<li><a href="Course.jsp"  class="active"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
+				<li><a href="Course.jsp"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
 				<li><a href="Evaluation.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>
@@ -393,10 +393,7 @@ function edit_changeStaffroom(val){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="Course.jsp" class="active">课程管理</a></li>
-						<li><a href="">Dashboard</a></li>
-						<li><a href="">Overview</a></li>
-						<li><a href="login.html">Sign in form</a></li>
+						<li><a href="Teacher.jsp" class="active">教师管理</a></li>
 					</ul>
 					</nav>
 				</div>

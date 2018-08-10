@@ -39,36 +39,29 @@ $(document).ready(function(){
 			select:3
         },
         success: function (data) {
-            $.each(data.instList, function(index, item) {
+            $.each(data.typeList, function(index, item) {
 	            $("#option_search").append(  
-	    			"<option value="+item.instid+">" + item.instname+ "</option>");
+	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            /*弹出jqXHR对象的信息*/
-            alert(jqXHR.responseText);
-            alert(jqXHR.status);
-            alert(jqXHR.readyState);
-            alert(jqXHR.statusText);
-            /*弹出其他两个参数的信息*/
-            alert(textStatus);
             alert(errorThrown);
         }
 
     });
 	
 	$.ajax({
-        url: "CourseControlServlet",
-        type: "GET",
+        url: "StudentControlServlet",
+        type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"get_staffroom"
+        	flag:"loading_evaluation"
         },
         success: function (data) {
-        	$(".inst_content tr").remove();
+        	$(".evaluation_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".inst_content").append('<tr><td>'+(++index)+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_staffroom&staffroomid='+item.staffroomid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".evaluation_content").append('<tr><td>'+(++index)+'.</td><td class="edit_evaluationid">'+item.evaluationid+'</td><td class="edit_coursetype">'+item.coursetype+'</td><td class="edit_content">'+item.content+'</td><td><a onclick="edit_get('+index+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_evaluation&evaluationid='+item.evaluationid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -78,26 +71,26 @@ $(document).ready(function(){
 	
 });
 
-function showInst(val){
-	
-	var fg = "select_staffroom";
+function showCoursetype(){
+	var val = $("#option_search option:selected").val();
+	var fg = "select_evaluation";
 	if(val == 'all')
-		fg= "get_staffroom";
+		fg= "loading_evaluation";
 	$.ajax({
-        url: "CourseControlServlet",
-        type: "GET",
+        url: "StudentControlServlet",
+        type: "POST",
         dataType:"JSON",
         data: {
 			flag:fg,
-			instid:val,
+			coursetypeid:val,
 			date:new Date()
         },
         success: function (data) {
-            $(".inst_content tr").remove();
+            $(".evaluation_content tr").remove();
             var str = "'确定要删除吗？'";
             $.each(data, function(index, item) {
-            	$(".inst_content").append('<tr><td>'+(++index)+'.</td><td class="edit_staffroomid">'+item.staffroomid+'</td><td>'+item.instname+'</td><td class="edit_staffroomname">'+item.staffroomname+'</td><td><a onclick="edit_get('+index+','+item.instid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_staffroom&staffroomid='+item.staffroomid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
-            });
+            	$(".evaluation_content").append('<tr><td>'+(++index)+'.</td><td class="edit_evaluationid">'+item.evaluationid+'</td><td class="edit_coursetype">'+item.coursetype+'</td><td class="edit_content">'+item.content+'</td><td><a onclick="edit_get('+index+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="StudentControlServlet?flag=delete_evaluation&evaluationid='+item.evaluationid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+ 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
@@ -107,9 +100,8 @@ function showInst(val){
 }
 
 function edit_get(i,id){
-	var a = $(".edit_staffroomid").eq(i - 1).text();
-	$(".upd_con input")[0].value = $(".edit_staffroomid").eq(i - 1).text();
-	$(".upd_con input")[1].value = $(".edit_staffroomname").eq(i - 1).text();
+	$(".upd_con input")[0].value = $(".edit_evaluationid").eq(i - 1).text();
+	$(".upd_con input")[1].value = $(".edit_content").eq(i - 1).text();
 	
 	$.ajax({
         url: "SelectServlet",
@@ -122,13 +114,13 @@ function edit_get(i,id){
         success: function (data) {
             /*console.log(typeof(data));*/
             $("#option_tip option").remove();
-            $.each(data.instList, function(index, item) {
-            	if(item.instid == id){
+            $.each(data.typeList, function(index, item) {
+            	if(item.coursetypeid == id){
             		$("#option_tip").append(
-                 	    	"<option class='slt' value="+item.instid+">" + item.instname+ "</option>");
+                 	    	"<option class='slt' value="+item.coursetypeid+">" + item.coursetype+ "</option>");
             	}else{
             	$("#option_tip").append(
-         	    	"<option value="+item.instid+">" + item.instname+ "</option>");
+         	    	"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
             	}
 	        });
             
@@ -159,9 +151,9 @@ function add(){
         },
         success: function (data) {
             $("#option_add_tip option").remove();
-            $.each(data.instList, function(index, item) {
+            $.each(data.typeList, function(index, item) {
             	$("#option_add_tip").append(
-         	    	"<option value="+item.instid+">" + item.instname+ "</option>");
+         	    	"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -204,11 +196,11 @@ function add(){
 			<nav class="templatemo-left-nav">
 			<ul>
 				<li><a href="index.jsp"><i class="fa fa-home fa-fw"></i>首页</a></li>
-				<li><a href="Inst.jsp"  class="active"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
+				<li><a href="Inst.jsp"><i class="fa fa-bar-chart fa-fw"></i>机构管理</a></li>
 				<li><a href="Teacher.jsp"><i class="fa fa-database fa-fw"></i>教师管理</a></li>
 				<li><a href="Student.jsp"><i class="fa fa-map-marker fa-fw"></i>学生管理</a></li>
 				<li><a href="Course.jsp"><i class="fa fa-users fa-fw"></i>课程管理</a></li>
-				<li><a href="Evaluation.jsp"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
+				<li><a href="Evaluation.jsp" class="active"><i class="fa fa-sliders fa-fw"></i>评价管理</a></li>
 				<li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
 			</ul>
 			</nav>
@@ -219,8 +211,8 @@ function add(){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="Inst.jsp">学院管理</a></li>
-						<li><a href="Staffroom.jsp"	class="active">教研室管理</a></li>
+						<li><a href="Evaluation.jsp"class="active">评价指标</a></li>
+						<li><a href="Staffroom.jsp">学期评价</a></li>
 					</ul>
 					</nav>
 				</div>
@@ -235,14 +227,14 @@ function add(){
 					style="padding: 15px">
 					<div class="row ">
 						<div class="col-lg-6 col-md-6 " style="width: 20%">
-							<label class="control-label templatemo-block">开课学院</label> 
-							<select onchange="showInst(this.value)" class="form-control" id="option_search">
+							<label class="control-label templatemo-block">课程类型</label> 
+							<select name="coursetypeid" class="form-control" id="option_search">
 								<option value="all" checked>全部</option>
 							</select>
 						</div>
 						<div class="col-lg-6 col-md-6 "
 							style="width: 35%; padding-top: 16px">
-							<button type="submit" class="templatemo-blue-button">Update</button>
+							<button type="submit" onclick="showCoursetype()" class="templatemo-blue-button">Update</button>
 							<button type="reset" class="templatemo-white-button"
 								onclick="add()" style="margin-left: 10px">Add</button>
 							<button type="reset" class="templatemo-white-button"
@@ -262,33 +254,33 @@ function add(){
 									<td><a href="" class="white-text templatemo-sort-by">#
 											<span class="caret"></span>
 									</a></td>
-									<td><a href="" class="white-text templatemo-sort-by">教研室代码<span
+									<td><a href="" class="white-text templatemo-sort-by">指标代码<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">所属学院<span
+									<td><a href="" class="white-text templatemo-sort-by">所属课程类型<span
 											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">教研室名称<span
+									<td><a href="" class="white-text templatemo-sort-by">评价指标详情<span
 											class="caret"></span></a></td>
 									<td>Edit</td>
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody class="inst_content">
+							<tbody class="evaluation_content">
 								<!-- <tr><td  colspan="6" align="center">没有信息！</td></tr> -->
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
-										<form action="CourseControlServlet" method="post">
-											<div class="upd_con">教研室代码: <input name="staffroomid" value="" type="text" readonly="true" /> <br>
-												<br>所属学院：<select name="instid" class="" id="option_tip"></select>
-												<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
+										<form action="StudentControlServlet" method="post">
+											<div class="upd_con">指标代码: <input name="evaluationid" value="" type="text" readonly="true" /> <br>
+												<br>所属课程类型：<select name="coursetypeid" class="" id="option_tip"></select>
+												<br><br>评价指标详情: <input type="text" name="content" value="" />
 											</div>
 
 											<div class="upd_updbtn">
 												<input type="submit" value="保存" /> <input class="upd_close"
 													type="button" value="取消" />
 											</div>
-											<input type="hidden" name="staffroomid" value="" /> <input
-												type="hidden" name="flag" value="update_staffroom" />
+											<input type="hidden" name="evaluationid" value="" /> <input
+												type="hidden" name="flag" value="update_evaluation" />
 										</form>
 									</div>
 								</div>
@@ -324,26 +316,19 @@ function add(){
 		</div>
 	</div>
 
-
-
-
-
-
-
-
 	<div class="add_tip">
 		<div>
-			<form action="CourseControlServlet" method="post">
+			<form action="StudentControlServlet" method="post">
 				<div class="add_con">
-				教研室代码: <input name="staffroomid" value="" type="text" /> <br>
-				<br>所属学院：<select name="instid" class="" id="option_add_tip"></select>
-				<br><br>教研室名称: <input type="text" name="staffroomname" value="" />
+				指标代码: <input name="evaluationid" value="" type="text" /> <br>
+				<br>所属课程类型：<select name="coursetypeid" class="" id="option_add_tip"></select>
+				<br><br>评价指标详情: <input type="text" name="content" value="" />
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add_staffroom" />
+				<input type="hidden" name="flag" value="add_evaluation" />
 			</form>
 		</div>
 	</div>

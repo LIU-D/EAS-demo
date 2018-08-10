@@ -61,10 +61,7 @@
           <div class="row">
             <nav class="templatemo-top-nav col-lg-12 col-md-12">
               <ul class="text-uppercase">
-                <li><a href="" class="active">首页</a></li>
-                <li><a href="">XXXX</a></li>
-                <li><a href="">Overview</a></li>
-                <li><a href="login.html">Sign in form</a></li>
+                <li><a href="index.jsp" class="active">首页</a></li>
               </ul>  
             </nav> 
           </div>

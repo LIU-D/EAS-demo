@@ -30,32 +30,36 @@ import com.mysql.jdbc.Statement;
 @WebServlet("/SelectServlet")
 public class SelectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public SelectServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public SelectServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		DBC DBC = new DBC();
 		String select = request.getParameter("select");
 		System.out.println("select=" + select);
-		
-		if(select.equals("0")) {
+
+		if (select.equals("0")) {
 			List<Inst> instList = new ArrayList<Inst>();
 			try {
 				Connection con = (Connection) DBC.getCon();
@@ -70,23 +74,21 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(instList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
-			    out.print(json_list);
-			    out.flush();
+				out.print(json_list);
+				out.flush();
 				out.close();
 				DBC.closeAll();
-				
+
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
-		
-		if(select.equals("1")) {
+		if (select.equals("1")) {
 			try {
 				List<Staffroom> staffroomList = new ArrayList<Staffroom>();
 				DBC.getCon();
@@ -101,27 +103,27 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(staffroomList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
 				out.print(json_list);
-			    out.flush();
+				out.flush();
 				out.close();
 				DBC.closeAll();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//select == 1
-		
-		if(select.equals("2")) {
+		} // select == 1
+
+		if (select.equals("2")) {
 			try {
 				DBC.getCon();
 				String sql = "select * from staffroom where staffroomid = ?";
 				String[] param = { request.getParameter("staffroomid") };
 				ResultSet rs = DBC.executeQuery(sql, param);
 				String instid = rs.getString("instid");
-				
+
 				String sql_2 = "select * from inst where instid = ?";
 				String[] param_2 = { instid };
 				ResultSet rs_2 = DBC.executeQuery(sql_2, param_2);
@@ -130,19 +132,19 @@ public class SelectServlet extends HttpServlet {
 				inst.setInstid(Integer.parseInt(instid));
 				inst.setInstname(instname);
 				Gson gson = new Gson();
-				String inst_list= gson.toJson(inst);
+				String inst_list = gson.toJson(inst);
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
-			    out.print(inst_list);
+				out.print(inst_list);
 				DBC.closeAll();
-				
+
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//select == 2
-		
-		if(select.equals("3")) {
+		} // select == 2
+
+		if (select.equals("3")) {
 			List<Inst> instList = new ArrayList<Inst>();
 			List<Staffroom> staffroomList = new ArrayList<Staffroom>();
 			List<CourseType> typeList = new ArrayList<CourseType>();
@@ -159,7 +161,7 @@ public class SelectServlet extends HttpServlet {
 					inst.setInstname(rs_1.getString("instname"));
 					instList.add(inst);
 				}
-				
+
 				String sql_2 = "select * from staffroom";
 				ResultSet rs_2 = st_1.executeQuery(sql_2);
 				while (rs_2.next()) {// 判断是否还有下一个数据
@@ -168,8 +170,8 @@ public class SelectServlet extends HttpServlet {
 					staffroom.setStaffroomname(rs_2.getString("staffroomname"));
 					staffroomList.add(staffroom);
 				}
-				
-				String sql_3= "select * from coursetype";
+
+				String sql_3 = "select * from coursetype";
 				ResultSet rs_3 = st_1.executeQuery(sql_3);
 				while (rs_3.next()) {// 判断是否还有下一个数据
 					CourseType c = new CourseType();
@@ -177,8 +179,8 @@ public class SelectServlet extends HttpServlet {
 					c.setCoursetype(rs_3.getString("coursetype"));
 					typeList.add(c);
 				}
-				
-				String sql_4= "select * from major";
+
+				String sql_4 = "select * from major";
 				ResultSet rs_4 = st_1.executeQuery(sql_4);
 				while (rs_4.next()) {// 判断是否还有下一个数据
 					Major m = new Major();
@@ -186,8 +188,8 @@ public class SelectServlet extends HttpServlet {
 					m.setMajorname(rs_4.getString("majorname"));
 					majorList.add(m);
 				}
-				
-				String sql_5= "select * from classroom";
+
+				String sql_5 = "select * from classroom";
 				ResultSet rs_5 = st_1.executeQuery(sql_5);
 				while (rs_5.next()) {// 判断是否还有下一个数据
 					Classroom c = new Classroom();
@@ -196,26 +198,26 @@ public class SelectServlet extends HttpServlet {
 					c.setClassname(rs_5.getString("classname"));
 					classList.add(c);
 				}
-				JsonSelect jsonSelect = new JsonSelect(instList,staffroomList,typeList,majorList,classList);
-				
+				JsonSelect jsonSelect = new JsonSelect(instList, staffroomList, typeList, majorList, classList);
+
 				Gson gson = new Gson();
 				String json_list = gson.toJson(jsonSelect);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
-			    out.print(json_list);
-			    out.flush();
+				out.print(json_list);
+				out.flush();
 				out.close();
 				DBC.closeAll();
-				
+
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
-		if(select.equals("changeMajor")) {
+
+		if (select.equals("changeMajor")) {
 			try {
 				List<Major> majorList = new ArrayList<Major>();
 				DBC.getCon();
@@ -230,20 +232,20 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(majorList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
 				out.print(json_list);
-			    out.flush();
+				out.flush();
 				out.close();
 				DBC.closeAll();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//select == changeMajor
-		
-		if(select.equals("changeClassroom")) {
+		} // select == changeMajor
+
+		if (select.equals("changeClassroom")) {
 			System.out.println(request.getParameter("majorid"));
 			try {
 				List<Classroom> classList = new ArrayList<Classroom>();
@@ -259,20 +261,20 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(classList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
 				out.print(json_list);
-			    out.flush();
+				out.flush();
 				out.close();
 				DBC.closeAll();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//select == changeClassroom
-		
-		if(select.equals("instid_changeClassroom")) {
+		} // select == changeClassroom
+
+		if (select.equals("instid_changeClassroom")) {
 			try {
 				List<Classroom> classList = new ArrayList<Classroom>();
 				DBC.getCon();
@@ -287,21 +289,21 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(classList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
 				out.print(json_list);
-			    out.flush();
+				out.flush();
 				out.close();
 				DBC.closeAll();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//select == instid_changeClassroom
-		
-		//加载年级
-		if(select.equals("classroom_loadingyear")) {
+		} // select == instid_changeClassroom
+
+		// 加载年级
+		if (select.equals("classroom_loadingyear")) {
 			List<Classroom> classList = new ArrayList<Classroom>();
 			try {
 				Connection con = (Connection) DBC.getCon();
@@ -315,20 +317,19 @@ public class SelectServlet extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String json_list = gson.toJson(classList);
-				response.setHeader("Cache-Control", "no-cache");//去除缓存
+				response.setHeader("Cache-Control", "no-cache");// 去除缓存
 				response.setContentType("application/json;charset=utf-8");
 				PrintWriter out = response.getWriter();
-			    out.print(json_list);
-			    out.flush();
+				out.print(json_list);
+				out.flush();
 				out.close();
 				DBC.closeAll();
-				
+
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}//classroom_loadingyear
-		
+		} // classroom_loadingyear
 		doGet(request, response);
 	}
 

@@ -116,8 +116,6 @@ function add(){
 					<ul class="text-uppercase">
 						<li><a href="Inst.jsp" class="active">学院管理</a></li>
 						<li><a href="Staffroom.jsp">教研室管理</a></li>
-						<li><a href="">Overview</a></li>
-						<li><a href="login.html">Sign in form</a></li>
 					</ul>
 					</nav>
 				</div>

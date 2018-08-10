@@ -19,6 +19,7 @@ import com.dao.DBC;
 import com.google.gson.Gson;
 import com.mod.Classroom;
 import com.mod.Course;
+import com.mod.Evaluation;
 import com.mod.Major;
 import com.mod.Student;
 import com.mod.Teacher;
@@ -117,6 +118,22 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // flag=delete_major
+
+			// 删除评价指标信息
+			if (flag.equals("delete_evaluation")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from evaluation where evaluationid= ?";
+					String[] param = { request.getParameter("evaluationid"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Evaluation.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_evaluationid
 
 		} // else
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -618,6 +635,102 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // select_major
+
+			// 增加评价指标信息
+			if (flag.equals("add_evaluation")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into evaluation(evaluationid,content,coursetypeid)values(?,?,?)";
+					String[] param = { request.getParameter("evaluationid"), request.getParameter("content"),
+							request.getParameter("coursetypeid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Evaluation.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // add_evaluation
+
+			// 修改评价指标信息
+			if (flag.equals("update_evaluation")) {
+				try {
+					DBC.getCon();
+					String sql = "update evaluation set content = ?,coursetypeid=? where evaluationid=?";
+					String[] param = { request.getParameter("content"), request.getParameter("coursetypeid"),
+							request.getParameter("evaluationid") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Evaluation.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_evaluation
+
+			// 加载评价指标信息
+			if (flag.equals("loading_evaluation")) {
+				try {
+					List<Evaluation> evaluationList = new ArrayList<Evaluation>();
+					Connection con = (Connection) DBC.getCon();
+					String sql = "select * from evaluation,coursetype where evaluation.coursetypeid = coursetype.coursetypeid";
+					Statement st = (Statement) con.createStatement();
+					ResultSet rs = st.executeQuery(sql);
+					while (rs.next()) {// 判断是否还有下一个数据
+						Evaluation evaluation = new Evaluation();
+						evaluation.setEvaluationid(rs.getInt("evaluationid"));
+						evaluation.setContent(rs.getString("content"));
+						evaluation.setCoursetypeid(rs.getInt("coursetypeid"));
+						evaluation.setCoursetype(rs.getString("coursetype"));
+						evaluationList.add(evaluation);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(evaluationList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // loading_evaluation
+
+			// 选择显示评价指标信息
+			if (flag.equals("select_evaluation")) {
+				try {
+					List<Evaluation> evaluationList = new ArrayList<Evaluation>();
+					Connection con = (Connection) DBC.getCon();
+					ResultSet rs = null;
+					String sql = "select * from evaluation,coursetype where evaluation.coursetypeid=coursetype.coursetypeid and evaluation.coursetypeid=?";
+					PreparedStatement ps = con.prepareStatement(sql);
+					ps.setString(1, request.getParameter("coursetypeid"));
+					rs = ps.executeQuery();
+					while (rs.next()) {// 判断是否还有下一个数据
+						Evaluation evaluation = new Evaluation();
+						evaluation.setEvaluationid(rs.getInt("evaluationid"));
+						evaluation.setContent(rs.getString("content"));
+						evaluation.setCoursetypeid(rs.getInt("coursetypeid"));
+						evaluation.setCoursetype(rs.getString("coursetype"));
+						evaluationList.add(evaluation);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(evaluationList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // select_evaluation
 
 		} // else
 	}

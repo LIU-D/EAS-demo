@@ -411,9 +411,6 @@ function edit_changeStaffroom(val){
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
 						<li><a href="Course.jsp" class="active">课程管理</a></li>
-						<li><a href="">Dashboard</a></li>
-						<li><a href="">Overview</a></li>
-						<li><a href="login.html">Sign in form</a></li>
 					</ul>
 					</nav>
 				</div>
