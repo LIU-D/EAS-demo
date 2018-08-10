@@ -137,7 +137,7 @@ function edit_get(i,instid,staffroomid,coursetypeid){
         },
         success: function (data) {
             $("#edit_option_1 option").remove();
-            $("#edit_option_3 option").remove();
+            $("#edit_option_1").append("<option select='select' value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
             	if(item.instid == instid){
             		$("#edit_option_1").append(
@@ -147,14 +147,6 @@ function edit_get(i,instid,staffroomid,coursetypeid){
          	    	"<option value="+item.instid+">" + item.instname+ "</option>");
             	}
 	        });
-            $.each(data.typeList, function(index, item) {
-            	if(item.coursetypeid == coursetypeid){
-            		 $("#edit_option_3").append("<option class='slt' value="+item.coursetypeid+">" + item.coursetype+ "</option>");
-            	}else{
-            		 $("#edit_option_3").append("<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
-            	}
-	        });
-            
             $(".slt").attr("selected",true);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -173,6 +165,7 @@ function edit_get(i,instid,staffroomid,coursetypeid){
         },
         success: function (data) {
             $("#edit_option_2 option").remove();
+            $("#edit_option_2").append("<option select='select' value='all'>全部</option>");
             $.each(data, function(index, item) {
             	if(item.staffroomid == staffroomid){
             		$("#edit_option_2").append(
@@ -191,9 +184,9 @@ function edit_get(i,instid,staffroomid,coursetypeid){
 
     });
 	
-	var a = $(".edit_courseid").eq(i - 1).text();
-	$(".upd_con input")[0].value = $(".edit_courseid").eq(i - 1).text();
-	$(".upd_con input")[1].value = $(".edit_coursename").eq(i - 1).text();
+	var a = $(".edit_teacherid").eq(i - 1).text();
+	$(".upd_con input")[0].value = $(".edit_teacherid").eq(i - 1).text();
+	$(".upd_con input")[1].value = $(".edit_teachername").eq(i - 1).text();
 	$(".upd_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".upd_close").click(function(){
 		$(".upd_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -240,8 +233,8 @@ function add(){
         success: function (data) {
         	$("#add_option_1 option").remove();
         	$("#add_option_2 option").remove();
-        	$("#add_option_3 option").remove();
         	$("#add_option_1").append("<option value='all'>全部</option>");
+        	$("#add_option_2").append("<option value='all'>全部</option>");
             $.each(data.instList, function(index, item) {
 	            $("#add_option_1").append(  
 	    			"<option value="+item.instid+">" + item.instname+ "</option>");
@@ -249,10 +242,6 @@ function add(){
             $.each(data.staffroomList, function(index, item) {
 	            $("#add_option_2").append(  
 	    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
-	        });
-            $.each(data.typeList, function(index, item) {
-	            $("#add_option_3").append(  
-	    			"<option value="+item.coursetypeid+">" + item.coursetype+ "</option>");
 	        });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -300,6 +289,7 @@ function add_changeStaffroom(val){
 	        },
 	        success: function (data) {
 	        	$("#add_option_2 option").remove();
+	        	$("#add_option_2").append("<option value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#add_option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
@@ -347,6 +337,7 @@ function edit_changeStaffroom(val){
 	        },
 	        success: function (data) {
 	        	$("#edit_option_2 option").remove();
+	        	$("#edit_option_2").append("<option select='select' value='all'>全部</option>");
 	            $.each(data, function(index, item) {
 		            $("#edit_option_2").append(  
 		    			"<option value="+item.staffroomid+">" + item.staffroomname+ "</option>");
@@ -472,13 +463,12 @@ function edit_changeStaffroom(val){
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">
 									<div>
-										<form action="CourseControlServlet" method="post">
+										<form action="StudentControlServlet" method="post">
 											<div class="upd_con">
-												课程代码: <input readonly="true" name="courseid" value="" type="text" /><br>
-												开课学院: <select onchange="edit_changeStaffroom(this.value)" id="edit_option_1" name="instid"></select><br> 
-												开课教研室: <select id="edit_option_2" name="staffroomid"></select><br> 
-												课程名称: <input type="text" name="coursename" value="" /><br>
-												课程类型: <select id="edit_option_3" name="coursetypeid"></select>
+												教师工号: <input readonly="true" name="teacherid" value="" type="text" /><br>
+												所属学院: <select onchange="edit_changeStaffroom(this.value)" id="edit_option_1" name="instid"></select><br> 
+												所属教研室: <select id="edit_option_2" name="staffroomid"></select><br> 
+												教师姓名: <input type="text" name="teachername" value="" /><br>
 											</div>
 
 											<div class="upd_updbtn">
@@ -486,7 +476,7 @@ function edit_changeStaffroom(val){
 													type="button" value="取消" />
 											</div>
 											<input type="hidden" name="courseid" value="" /> <input
-												type="hidden" name="flag" value="update_course" />
+												type="hidden" name="flag" value="update_teacher" />
 										</form>
 									</div>
 								</div>
@@ -522,27 +512,20 @@ function edit_changeStaffroom(val){
 		</div>
 	</div>
 
-
-
-
-
-
-
-
 	<div class="add_tip">
 		<div>
-			<form action="CourseControlServlet" method="post">
+			<form action="StudentControlServlet" method="post">
 				<div class="add_con">
-					课程代码: <input name="courseid" value="" type="text" /><br>
-					开课学院: <select onchange="add_changeStaffroom(this.value)" id="add_option_1" name="instid"></select><br> 
-					开课教研室: <select id="add_option_2" name="staffroomid"></select><br> 课程名称: <input type="text" name="coursename" value="" /><br>
-					课程类型: <select id="add_option_3" name="coursetypeid"></select><br>
+					教师工号: <input name="teacherid" value="" type="text" /><br>
+					所属学院: <select onchange="add_changeStaffroom(this.value)" id="add_option_1" name="instid"></select><br> 
+					所属教研室: <select id="add_option_2" name="staffroomid"></select><br>
+					教师姓名: <input name="teachername" value="" type="text" /><br>
 				</div>
 				<div class="add_addbtn">
 					<input type="submit" value="添加" /> <input class="add_close"
 						type="button" value="取消" />
 				</div>
-				<input type="hidden" name="flag" value="add_course" />
+				<input type="hidden" name="flag" value="add_teacher" />
 			</form>
 		</div>
 	</div>
