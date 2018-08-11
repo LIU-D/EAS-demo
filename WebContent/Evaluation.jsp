@@ -212,7 +212,7 @@ function add(){
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
 						<li><a href="Evaluation.jsp"class="active">评价指标</a></li>
-						<li><a href="Staffroom.jsp">学期评价</a></li>
+						<li><a href="Term.jsp">学期评价</a></li>
 					</ul>
 					</nav>
 				</div>

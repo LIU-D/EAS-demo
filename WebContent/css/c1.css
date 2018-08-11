@@ -91,4 +91,48 @@
     height: 40px;
 }
 
+
+.open_tip{
+    border-top: 30px solid #7A7A7A;
+    border-left: solid 2px #7A7A7A;
+    border-right: solid 2px #7A7A7A;
+    border-bottom: solid 2px #7A7A7A;
+    background-color: white;
+    position:absolute;
+    top: 51%;
+    left: 52.65%;
+    width:400px;
+    height:300px;
+    overflow:hidden;
+    margin: -200px 0 0 -200px;
+    z-index:1;
+}
+
+
+.open_con{
+    popening-top: 20px;
+    padding-left: 40px;
+    padding-bottom: 20px;
+}
+
+.open_con input{
+    font-size: 16px;
+    height: 30px;
+}
+
+.open_con select{
+	font-size: 16px;
+	height: 30px;
+}
+
+.open_btn{
+    padding-left: 70px;
+    letter-spacing: 40px;
+}
+
+.open_btn input{
+    font-size: 18px;
+    width: 100px;
+    height: 40px;
+}
 /******************************************************************************************/

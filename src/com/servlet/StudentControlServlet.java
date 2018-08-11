@@ -23,6 +23,7 @@ import com.mod.Evaluation;
 import com.mod.Major;
 import com.mod.Student;
 import com.mod.Teacher;
+import com.mod.Term;
 import com.mysql.jdbc.Connection;
 
 /**
@@ -134,6 +135,22 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // flag=delete_evaluationid
+
+			// 删除学期信息
+			if (flag.equals("delete_term")) {
+				try {
+					DBC.getCon();
+					String sql = "delete from term where id= ?";
+					String[] param = { request.getParameter("id"), };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Term.jsp");
+
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // flag=delete_termid
 
 		} // else
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -731,6 +748,68 @@ public class StudentControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // select_evaluation
+
+			// 增加学期
+			if (flag.equals("add_term")) {
+				try {
+					DBC.getCon();
+					String sql = "insert into term(schoolyear,term)values(?,?)";
+					String[] param = {request.getParameter("schoolyear"),request.getParameter("term") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Term.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // add_term
+
+			// 修改学期信息
+			if (flag.equals("update_term")) {
+				try {
+					DBC.getCon();
+					String sql = "update term set schoolyear = ?,term=? where id=?";
+					String[] param = { request.getParameter("schoolyear"), request.getParameter("term"),
+							request.getParameter("id") };
+					DBC.executeUpdate(sql, param);
+					DBC.closeAll();
+					response.sendRedirect("Term.jsp");
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // update_term
+
+			// 加载学期信息
+			if (flag.equals("loading_term")) {
+				try {
+					List<Term> termList = new ArrayList<Term>();
+					Connection con = (Connection) DBC.getCon();
+					String sql = "select * from term order by schoolyear";
+					Statement st = (Statement) con.createStatement();
+					ResultSet rs = st.executeQuery(sql);
+					while (rs.next()) {// 判断是否还有下一个数据
+						Term term = new Term();
+						term.setId(rs.getInt("id"));
+						term.setSchoolyear(rs.getString("schoolyear"));
+						term.setTerm(rs.getString("term"));
+						term.setOpen(rs.getString("open"));
+						termList.add(term);
+					}
+					Gson gson = new Gson();
+					String json_list = gson.toJson(termList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // loading_term
 
 		} // else
 	}
