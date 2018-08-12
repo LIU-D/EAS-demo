@@ -766,13 +766,14 @@ public class StudentControlServlet extends HttpServlet {
 
 			// 修改学期信息
 			if (flag.equals("update_term")) {
+				System.out.println(request.getParameter("evaluationid"));
 				try {
 					DBC.getCon();
-					String sql = "update term set schoolyear = ?,term=? where id=?";
-					String[] param = { request.getParameter("schoolyear"), request.getParameter("term"),
-							request.getParameter("id") };
-					DBC.executeUpdate(sql, param);
-					DBC.closeAll();
+//					String sql = "update term set schoolyear = ?,term=? where id=?";
+//					String[] param = { request.getParameter("schoolyear"), request.getParameter("term"),
+//							request.getParameter("id") };
+//					DBC.executeUpdate(sql, param);
+//					DBC.closeAll();
 					response.sendRedirect("Term.jsp");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block

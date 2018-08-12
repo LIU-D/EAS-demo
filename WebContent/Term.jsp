@@ -57,9 +57,33 @@ function add(){
 		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
 	})
 }
-
+function ckbox(i,id){
+	$('.ck input:checkbox').eq(i).attr('checked', 'true');
+}
 function isOpen(i,id){
+	//加载评价指标信息
+	$.ajax({
+        url: "StudentControlServlet",
+        type: "POST",
+        dataType:"JSON",
+        data: {
+        	flag:"loading_evaluation"
+        },
+        success: function (data) {
+        	$(".ck").remove();
+        	 var str = "'确定要删除吗？'";
+             $.each(data, function(index, item) {
+             	$(".open_checkbox").append('<div class="ck form-group"><div class="checkbox squaredTwo"><input type="checkbox" name="evaluationid" id=id_'+item.evaluationid+' value='+item.evaluationid+'><label onclick="ckbox('+index+','+item.evaluationid+')" for=id_'+item.evaluationid+'><span></span>'+item.content+'</label></div></div>');
+             });
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+             alert(errorThrown);
+         }
+    });
+	
+
 	$(".open_con input")[0].value = $(".yearT").eq(i - 1).text();
+	$("#opid").attr("value",id);
 	$(".open_tip").fadeIn("fast");//淡入淡出效果 显示div
 	$(".open_close").click(function(){
 		$(".open_tip").fadeOut("fast");//淡入淡出效果 隐藏div
@@ -161,13 +185,13 @@ function isOpen(i,id){
 											学期: <input name="termid" value="" type="text" readonly="true" /> <br><br>
 											评价指标:
 											</div>
-
+											<div class="open_checkbox"></div>
 											<div class="open_btn">
 												<input type="submit" value="保存" /> 
 												<input class="open_close" type="button" value="取消" />
 											</div>
-											<input type="hidden" name="id" value="" /> <input
-												type="hidden" name="flag" value="update_term" />
+											<input id="opid" type="hidden" name="id" value="" />
+											<input type="hidden" name="flag" value="update_term" />
 										</form>
 									</div>
 								</div>
