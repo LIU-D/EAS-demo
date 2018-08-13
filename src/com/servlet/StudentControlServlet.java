@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -766,7 +767,8 @@ public class StudentControlServlet extends HttpServlet {
 
 			// 修改学期信息
 			if (flag.equals("update_term")) {
-				System.out.println(request.getParameter("evaluationid"));
+				String[] items = request.getParameterValues("evid");
+				System.out.println(items[0]);
 				try {
 					DBC.getCon();
 //					String sql = "update term set schoolyear = ?,term=? where id=?";

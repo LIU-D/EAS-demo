@@ -72,26 +72,6 @@ function ckbox(){
 	console.log($("#evid").val());
 }
 function isOpen(i,id){
-	//加载评价指标信息
-	$.ajax({
-        url: "StudentControlServlet",
-        type: "POST",
-        dataType:"JSON",
-        data: {
-        	flag:"loading_evaluation"
-        },
-        success: function (data) {
-        	$(".ck").remove();
-        	 var str = "'确定要删除吗？'";
-             $.each(data, function(index, item) {
-             	$(".open_checkbox").append('<div class="ck form-group"><div class="checkbox squaredTwo"><input type="checkbox" name="evid" id=id_'+item.evaluationid+' value='+item.evaluationid+'><label for=id_'+item.evaluationid+'><span></span>'+item.content+'</label></div></div>');
-             });
-         },
-         error: function (jqXHR, textStatus, errorThrown) {
-             alert(errorThrown);
-         }
-    });
-	
 
 	$(".open_con input")[0].value = $(".yearT").eq(i - 1).text();
 	$("#opid").attr("value",id);
@@ -196,7 +176,26 @@ function isOpen(i,id){
 											学期: <input name="termid" value="" type="text" readonly="true" /> <br><br>
 											评价指标:
 											</div>
-											<div class="open_checkbox"></div>
+											<div class="open_checkbox">
+												<div class="ck form-group">
+													<div class="checkbox squaredTwo">
+													<input type="checkbox" name="evid" id="id_1" value="1">
+													<label for="id_1"><span></span>评价指标内容测试评价指标内容测试评价指标内容测试</label>
+													</div>
+												</div>
+												
+												<div class="ck form-group">
+													<div class="checkbox squaredTwo">
+													<input type="checkbox" name="evid" id="id_3" value="3">
+													<label for="id_3"><span></span>实践课评价</label>
+													</div>
+												</div>
+												<div class="ck form-group"><div class="checkbox squaredTwo">
+													<input type="checkbox" name="evid" id="id_4" value="4">
+													<label for="id_4"><span></span>ContentConteentContentContent</label>
+													</div>
+												</div>
+											</div>
 											<div class="open_btn">
 												<input type="submit" value="保存" /> 
 												<input class="open_close" type="button" value="取消" />
