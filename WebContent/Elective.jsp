@@ -59,19 +59,19 @@ $(document).ready(function(){
 
     });
 	
-	//加载课程信息
+	//加载选课信息
 	$.ajax({
         url: "CourseControlServlet",
-        type: "GET",
+        type: "POST",
         dataType:"JSON",
         data: {
-        	flag:"get_course"
+        	flag:"loading_elective"
         },
         success: function (data) {
-        	$(".course_content tr").remove();
+        	$(".elective_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".course_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.courseid+'</td><td class="edit_coursename">'+item.coursename+'</td><td>'+item.instname+'</td><td>'+item.staffroomname+'</td><td>'+item.coursetype+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".elective_content").append('<tr><td>'+(++index)+'.</td><td class="edit_courseid">'+item.studentid+'</td><td class="edit_courseid">'+item.studentname+'</td><td class="edit_coursename">'+item.stinstname+'</td><td>'+item.majorname+'</td><td>'+item.classname+'</td><td>'+item.courseid+'</td><td>'+item.coursename+'</td><td>'+item.coinstname+'</td><td>'+item.staffroomname+'</td><td>'+item.teacherid+'</td><td>'+item.teachername+'</td><td>'+item.teinstname+'</td><td>'+item.schoolyear+' '+item.termname+'</td><td><a onclick="edit_get('+index+','+item.instid+','+item.staffroomid+','+item.coursetypeid+')" class="templatemo-edit-btn">Edit</a></td><td><a href="CourseControlServlet?flag=delete_course&courseid='+item.courseid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -410,8 +410,8 @@ function edit_changeStaffroom(val){
 				<div class="row">
 					<nav class="templatemo-top-nav col-lg-12 col-md-12">
 					<ul class="text-uppercase">
-						<li><a href="Course.jsp" class="active">课程管理</a></li>
-						<li><a href="Elective.jsp">选课管理</a></li>
+						<li><a href="Course.jsp">课程管理</a></li>
+						<li><a href="Elective.jsp" class="active">选课管理</a></li>
 					</ul>
 					</nav>
 				</div>
@@ -426,7 +426,7 @@ function edit_changeStaffroom(val){
 					style="padding: 15px">
 					<div class="row ">
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
-								<label class="control-label templatemo-block">开课学院</label> <select
+								<label class="control-label templatemo-block">学生所属学院</label> <select
 									onchange="changeStaffroom(this.value)" name="instid" class="form-control"
 									id="loading_option_1">
 									<option value="all" checked>全部</option>
@@ -434,18 +434,47 @@ function edit_changeStaffroom(val){
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 25%">
-								<label class="control-label templatemo-block">开课教研室</label> <select
+								<label class="control-label templatemo-block">学生所属专业</label> <select
 									name="staffroomid" class="form-control" id="loading_option_2">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
 
 							<div class="col-lg-6 col-md-6 " style="width: 20%">
-								<label class="control-label templatemo-block">课程类型</label> <select
+								<label class="control-label templatemo-block">学生所属班级</label> <select
 									name="coursetypeid" class="form-control" id="loading_option_3">
 									<option value="all" checked>全部</option>
 								</select>
 							</div>
+							
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">开课学院</label> <select
+									name="coursetypeid" class="form-control" id="loading_option_3">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
+							
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">开课教研室</label> <select
+									name="coursetypeid" class="form-control" id="loading_option_3">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
+							
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">学期</label> <select
+									name="coursetypeid" class="form-control" id="loading_option_3">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
+							
+							<div class="col-lg-6 col-md-6 " style="width: 20%">
+								<label class="control-label templatemo-block">教师所属学院</label> <select
+									name="coursetypeid" class="form-control" id="loading_option_3">
+									<option value="all" checked>全部</option>
+								</select>
+							</div>
+							
 
 							<div class="col-lg-6 col-md-6 " style="width: 35%; padding-top: 16px">
 								<button onclick="select_course()" type="submit" class="templatemo-blue-button">Update</button>
@@ -468,20 +497,24 @@ function edit_changeStaffroom(val){
 									<td><a href="" class="white-text templatemo-sort-by">#
 											<span class="caret"></span>
 									</a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程代码<span
-											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">课程名称<span
-											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课学院<span
-											class="caret"></span></a></td>
-									<td><a href="" class="white-text templatemo-sort-by">开课教研室<span
-											class="caret"></span></a></td>
-									<td>课程类别</td>
+									<td><a href="" class="white-text templatemo-sort-by">学生学号<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">学生姓名<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">学生学院<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">学生专业<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">学生班级<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">课程代码<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">课程名称<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">开课学院<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">开课教研室<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">教师工号<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">教师姓名<span class="caret"></span></a></td>
+									<td><a href="" class="white-text templatemo-sort-by">教师单位<span class="caret"></span></a></td>
+									<td>开课学期</td>
 									<td>Edit</td>
 									<td>Delete</td>
 								</tr>
 							</thead>
-							<tbody class="course_content">
+							<tbody class="elective_content">
 
 								<!------------------------------------------------------------------------------------------------------------------------------>
 								<div class="upd_tip">

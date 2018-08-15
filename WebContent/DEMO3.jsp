@@ -179,20 +179,12 @@ function isOpen(i,id){
 											<div class="open_checkbox">
 												<div class="ck form-group">
 													<div class="checkbox squaredTwo">
-													<input type="checkbox" name="evid" id="id_1" value="1">
-													<label for="id_1"><span></span>评价指标内容测试评价指标内容测试评价指标内容测试</label>
+													<input type="checkbox" name="evid" id="id_3" value="2">
+													<label for="id_3"><span></span>实践课评价</label>
 													</div>
-												</div>
-												
-												<div class="ck form-group">
 													<div class="checkbox squaredTwo">
 													<input type="checkbox" name="evid" id="id_3" value="3">
 													<label for="id_3"><span></span>实践课评价</label>
-													</div>
-												</div>
-												<div class="ck form-group"><div class="checkbox squaredTwo">
-													<input type="checkbox" name="evid" id="id_4" value="4">
-													<label for="id_4"><span></span>ContentConteentContentContent</label>
 													</div>
 												</div>
 											</div>

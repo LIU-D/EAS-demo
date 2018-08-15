@@ -1,21 +1,22 @@
 package com.mod;
 
 public class Term {
-	private int id;
-	private String term;
+	private int termid;
+	private String termname;
 	private String schoolyear;
 	private String open;
-	public int getId() {
-		return id;
+
+	public int getTermid() {
+		return termid;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setTermid(int termid) {
+		this.termid = termid;
 	}
-	public String getTerm() {
-		return term;
+	public String getTermname() {
+		return termname;
 	}
-	public void setTerm(String term) {
-		this.term = term;
+	public void setTermname(String termname) {
+		this.termname = termname;
 	}
 	public String getSchoolyear() {
 		return schoolyear;
@@ -31,8 +32,10 @@ public class Term {
 	}
 	@Override
 	public String toString() {
-		return "Term [id=" + id + ", term=" + term + ", schoolyear=" + schoolyear + ", open=" + open + "]";
+		return "Term [termid=" + termid + ", termname=" + termname + ", schoolyear=" + schoolyear + ", open=" + open
+				+ "]";
 	}
+
 	
 	
 

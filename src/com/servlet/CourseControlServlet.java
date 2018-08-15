@@ -17,14 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dao.DBC;
 import com.google.gson.Gson;
+import com.mod.Classroom;
 import com.mod.Course;
 import com.mod.CourseType;
+import com.mod.Elective;
 import com.mod.Inst;
 import com.mod.InstStaffroom;
 import com.mod.JsonSelect;
 import com.mod.Staffroom;
 import com.mysql.jdbc.Connection;
-
 
 /**
  * Servlet implementation class CourseControlServlet
@@ -32,20 +33,13 @@ import com.mysql.jdbc.Connection;
 @WebServlet("/CourseControlServlet")
 public class CourseControlServlet extends HttpServlet {
 
-	/*public String[] Add(String[] temp1, String[] temp2)// 两个字符串数组
-	{
-		String[] newStr = new String[temp1.length + temp2.length];
-		int i = 0;
-		for (int i1 = 0; i1 < temp1.length; i1++) {
-			newStr[i1] = temp1[i1];
-			i1++;
-		}
-		for (int i1 = temp1.length; i1 < temp2.length; i1++) {
-			newStr[i1] = temp2[i1];
-			i1++;
-		}
-		return newStr;
-	}*/
+	/*
+	 * public String[] Add(String[] temp1, String[] temp2)// 两个字符串数组 { String[]
+	 * newStr = new String[temp1.length + temp2.length]; int i = 0; for (int i1 = 0;
+	 * i1 < temp1.length; i1++) { newStr[i1] = temp1[i1]; i1++; } for (int i1 =
+	 * temp1.length; i1 < temp2.length; i1++) { newStr[i1] = temp2[i1]; i1++; }
+	 * return newStr; }
+	 */
 
 	private static final long serialVersionUID = 1L;
 
@@ -348,7 +342,7 @@ public class CourseControlServlet extends HttpServlet {
 				try {
 					DBC.getCon();
 					String sql = "insert into course(courseid,coursename,staffroomid,coursetypeid)values(?,?,?,?)";
-					String[] param = { request.getParameter("courseid"),request.getParameter("coursename"),
+					String[] param = { request.getParameter("courseid"), request.getParameter("coursename"),
 							request.getParameter("staffroomid"), request.getParameter("coursetypeid") };
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();
@@ -364,7 +358,8 @@ public class CourseControlServlet extends HttpServlet {
 				try {
 					DBC.getCon();
 					String sql = "update course set coursename = ?,staffroomid=?,coursetypeid=? where courseid = ?";
-					String[] param = { request.getParameter("coursename"),request.getParameter("staffroomid"),request.getParameter("coursetypeid"), request.getParameter("courseid"), };
+					String[] param = { request.getParameter("coursename"), request.getParameter("staffroomid"),
+							request.getParameter("coursetypeid"), request.getParameter("courseid"), };
 					System.out.println(param[0]);
 					System.out.println(param[1]);
 					DBC.executeUpdate(sql, param);
@@ -436,7 +431,6 @@ public class CourseControlServlet extends HttpServlet {
 					request.setAttribute("C_list", courseList);
 					DBC.closeAll();
 					request.getRequestDispatcher("Course.jsp").forward(request, response);
-
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					e.printStackTrace();
 				}
@@ -446,7 +440,7 @@ public class CourseControlServlet extends HttpServlet {
 			if (flag.equals("select_course")) {
 				try {
 					int count = 1;
-					int flag_1=0,flag_2=0,flag_3=0;
+					int flag_1 = 0, flag_2 = 0, flag_3 = 0;
 					List<Course> courseList = new ArrayList<Course>();
 					Connection con = (Connection) DBC.getCon();
 					ResultSet rs = null;
@@ -467,14 +461,17 @@ public class CourseControlServlet extends HttpServlet {
 						++flag_3;
 					}
 					System.out.println(sql);
-					if(count==1 && flag_3==0) {
+					if (count == 1 && flag_3 == 0) {
 						Statement st = (Statement) con.createStatement();
 						rs = st.executeQuery(sql);
-					}else {
+					} else {
 						PreparedStatement ps = con.prepareStatement(sql);
-						if(flag_1!=0) ps.setString(flag_1,request.getParameter("instid"));
-						if(flag_2!=0) ps.setString(count-flag_2,request.getParameter("staffroomid"));
-						if(flag_3!=0) ps.setString(count,request.getParameter("coursetypeid"));
+						if (flag_1 != 0)
+							ps.setString(flag_1, request.getParameter("instid"));
+						if (flag_2 != 0)
+							ps.setString(count - flag_2, request.getParameter("staffroomid"));
+						if (flag_3 != 0)
+							ps.setString(count, request.getParameter("coursetypeid"));
 						rs = ps.executeQuery();
 					}
 					while (rs.next()) {// 判断是否还有下一个数据
@@ -503,6 +500,82 @@ public class CourseControlServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} // flag ==select_course
+
+			// 加载选课信息
+			if (flag.equals("loading_elective")) {
+				try {
+					List<Elective> electiveList = new ArrayList<Elective>();
+					Connection con = (Connection) DBC.getCon();
+					String sql = "select * from elective";
+					Statement st = (Statement) con.createStatement();
+					ResultSet rs = st.executeQuery(sql);
+					while (rs.next()) {// 判断是否还有下一个数据
+						Elective elective = new Elective();
+						
+						String sql_1 = "select * from student NATURAL JOIN classroom NATURAL JOIN major NATURAL JOIN inst where studentid=?";
+						PreparedStatement ps = con.prepareStatement(sql_1);
+						ps.setString(1 , rs.getString("studentid"));
+						ResultSet rs_1 = ps.executeQuery();
+						while(rs_1.next()) {
+							elective.setStudentid(rs_1.getString("studentid"));
+							elective.setStudentname(rs_1.getString("studentname"));
+							elective.setClassid(rs_1.getInt("classid"));
+							elective.setClassname(rs_1.getString("classname"));
+							elective.setMajorid(rs_1.getInt("majorid"));
+							elective.setMajorname(rs_1.getString("majorname"));
+							elective.setStinstid(rs_1.getInt("instid"));
+							elective.setStinstname(rs_1.getString("instname"));
+						}
+						
+						String sql_2 = "select * from course NATURAL JOIN staffroom NATURAL JOIN inst where courseid=?";
+						PreparedStatement ps1 = con.prepareStatement(sql_2);
+						ps1.setString(1 , rs.getString("courseid"));
+						ResultSet rs_2 = ps1.executeQuery();
+						while(rs_2.next()) {
+							elective.setCourseid(rs_2.getInt("courseid"));
+							elective.setCoursename(rs_2.getString("coursename"));
+							elective.setStaffroomid(rs_2.getInt("staffroomid"));
+							elective.setStaffroomname(rs_2.getString("staffroomname"));
+							elective.setCoinstid(rs_2.getInt("instid"));
+							elective.setCoinstname(rs_2.getString("instname"));
+						}
+						String sql_3 = "select * from teacher NATURAL JOIN staffroom NATURAL JOIN inst where teacherid=?";
+						PreparedStatement ps2 = con.prepareStatement(sql_3);
+						ps2.setString(1 , rs.getString("teacherid"));
+						ResultSet rs_3 = ps2.executeQuery();
+						while(rs_3.next()) {
+							elective.setTeacherid(rs_3.getInt("teacherid"));
+							elective.setTeachername(rs_3.getString("teachername"));
+							elective.setTeinstid(rs_3.getInt("instid"));
+							elective.setTeinstname(rs_3.getString("instname"));
+						}
+						
+						String sql_4 = "select * from term where termid=?";
+						PreparedStatement ps3 = con.prepareStatement(sql_4);
+						ps3.setString(1 , rs.getString("termid"));
+						ResultSet rs_4 = ps3.executeQuery();
+						while(rs_4.next()) {
+							elective.setTermid(rs_4.getInt("termid"));
+							elective.setTermname(rs_4.getString("termname"));
+							elective.setSchoolyear(rs_4.getString("schoolyear"));
+						}
+						electiveList.add(elective);
+					}
+					System.out.println(electiveList);
+					Gson gson = new Gson();
+					String json_list = gson.toJson(electiveList);
+					response.setHeader("Cache-Control", "no-cache");// 去除缓存
+					response.setContentType("application/json;charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.print(json_list);
+					out.flush();
+					out.close();
+					DBC.closeAll();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} // loading_elective
 
 		} // else
 

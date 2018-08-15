@@ -42,7 +42,7 @@ $(document).ready(function(){
         	$(".term_content tr").remove();
         	 var str = "'确定要删除吗？'";
              $.each(data, function(index, item) {
-             	$(".term_content").append('<tr><td>'+(++index)+'.</td><td class="yearT">'+item.schoolyear+' '+item.term+'</td><td class="edit_open">'+item.open+'</td><td><a class="templatemo-edit-btn">Edit</a></td><td><a onclick="isOpen('+index+','+item.id+')" class="templatemo-edit-btn">open</a></td><td><a href="StudentControlServlet?flag=delete_term&id='+item.id+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
+             	$(".term_content").append('<tr><td>'+(++index)+'.</td><td class="yearT">'+item.schoolyear+' '+item.termname+'</td><td class="edit_open">'+item.open+'</td><td><a class="templatemo-edit-btn">Edit</a></td><td><a onclick="isOpen('+index+','+item.termid+')" class="templatemo-edit-btn">open</a></td><td><a href="StudentControlServlet?flag=delete_term&termid='+item.termid+'" class="templatemo-link" onclick="return confirm('+str+')">Delete</a></td></tr>');
  	        });
          },
          error: function (jqXHR, textStatus, errorThrown) {
@@ -50,28 +50,6 @@ $(document).ready(function(){
          }
     });
 	
-});//loading
-function add(){
-	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
-	$(".add_close").click(function(){
-		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
-	})
-}
-
-function ckd(i){
-	$('.ck input:checkbox').eq(i).attr('checked', 'true');
-}
-function ckbox(){
-	var checkstr="";
-	 $("input:checkbox[name=evaluationid]:checked'").each(function(i){
-		 if(i!=0) checkstr+=","; 
-         checkstr += $(this).val();    
-	 })
-	console.log(checkstr);
-	$("#evid").attr("value",checkstr);
-	console.log($("#evid").val());
-}
-function isOpen(i,id){
 	//加载评价指标信息
 	$.ajax({
         url: "StudentControlServlet",
@@ -92,7 +70,29 @@ function isOpen(i,id){
          }
     });
 	
+});//loading
+function add(){
+	$(".add_tip").fadeIn("fast");//淡入淡出效果 显示div
+	$(".add_close").click(function(){
+		$(".add_tip").fadeOut("fast");//淡入淡出效果 隐藏div
+	})
+}
 
+function ckd(i){
+	$('.ck input:checkbox').eq(i).attr('checked', 'true');
+}
+function sut(){
+	var checkstr="";
+	 $("input:checkbox[name='evaid'][checked='checked']").each(function(i){
+		 if(i!=0) checkstr+=","; 
+         checkstr += $(this).val();    
+	 })
+	alert(checkstr);
+	$("#evaid").attr("value",checkstr);
+	alert($("#evaid").val());
+	/* $("#smt").submit(); */
+}
+function isOpen(i,id){
 	$(".open_con input")[0].value = $(".yearT").eq(i - 1).text();
 	$("#opid").attr("value",id);
 	$(".open_tip").fadeIn("fast");//淡入淡出效果 显示div
@@ -198,10 +198,11 @@ function isOpen(i,id){
 											</div>
 											<div class="open_checkbox"></div>
 											<div class="open_btn">
-												<input type="submit" value="保存" /> 
+												<input id="smt" onclick="sut()" type="button" value="保存" /> 
 												<input class="open_close" type="button" value="取消" />
 											</div>
 											<input id="opid" type="hidden" name="id" value="" />
+											<input id="evid" type="hidden" name="evaid" value="" />
 											<input type="hidden" name="flag" value="update_term" />
 										</form>
 									</div>

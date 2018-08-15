@@ -56,7 +56,7 @@ public class StudentControlServlet extends HttpServlet {
 		if (flag == null) {
 			System.err.println("flag无值！");
 		} else {
-
+			
 			// 删除教师信息
 			if (flag.equals("delete_teacher")) {
 				try {
@@ -754,8 +754,8 @@ public class StudentControlServlet extends HttpServlet {
 			if (flag.equals("add_term")) {
 				try {
 					DBC.getCon();
-					String sql = "insert into term(schoolyear,term)values(?,?)";
-					String[] param = {request.getParameter("schoolyear"),request.getParameter("term") };
+					String sql = "insert into term(schoolyear,termname)values(?,?)";
+					String[] param = { request.getParameter("schoolyear"), request.getParameter("termname") };
 					DBC.executeUpdate(sql, param);
 					DBC.closeAll();
 					response.sendRedirect("Term.jsp");
@@ -767,15 +767,17 @@ public class StudentControlServlet extends HttpServlet {
 
 			// 修改学期信息
 			if (flag.equals("update_term")) {
-				String[] items = request.getParameterValues("evid");
-				System.out.println(items[0]);
+				System.out.println("servlet");
+				String items = request.getParameter("evaid");
+				System.out.println(items);
 				try {
 					DBC.getCon();
-//					String sql = "update term set schoolyear = ?,term=? where id=?";
-//					String[] param = { request.getParameter("schoolyear"), request.getParameter("term"),
-//							request.getParameter("id") };
-//					DBC.executeUpdate(sql, param);
-//					DBC.closeAll();
+					// String sql = "update term set schoolyear = ?,term=? where id=?";
+					// String[] param = { request.getParameter("schoolyear"),
+					// request.getParameter("term"),
+					// request.getParameter("id") };
+					// DBC.executeUpdate(sql, param);
+					// DBC.closeAll();
 					response.sendRedirect("Term.jsp");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
 					// TODO Auto-generated catch block
@@ -793,9 +795,9 @@ public class StudentControlServlet extends HttpServlet {
 					ResultSet rs = st.executeQuery(sql);
 					while (rs.next()) {// 判断是否还有下一个数据
 						Term term = new Term();
-						term.setId(rs.getInt("id"));
+						term.setTermid(rs.getInt("termid"));
 						term.setSchoolyear(rs.getString("schoolyear"));
-						term.setTerm(rs.getString("term"));
+						term.setTermname(rs.getString("termname"));
 						term.setOpen(rs.getString("open"));
 						termList.add(term);
 					}
